@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">agisales</string>
+    <string name="title_activity_main">agisales</string>
+    <string name="package_name">com.portfolio.agisales</string>
+    <string name="custom_url_scheme">com.portfolio.agisales</string>
+</resources>

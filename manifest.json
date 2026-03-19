@@ -1,0 +1,21 @@
+{
+  "name": "AgiSales App",
+  "short_name": "AgiSales",
+  "description": "Aplicativo AgiSales Offline",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#11afdc",
+  "icons": [
+    {
+      "src": "apple-touch-icon-114x114.png",
+      "sizes": "114x114",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
