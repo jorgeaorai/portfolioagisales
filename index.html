@@ -613,14 +613,8 @@
       <script src="js/scripts.js"></script>
       <script src="js/notes.js"></script>
       <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').then((registration) => {
-              console.log('ServiceWorker registrado com sucesso com o scope: ', registration.scope);
-            }).catch((error) => {
-              console.log('Falha no registro do ServiceWorker: ', error);
-            });
-          });
+        if (typeof navigator.serviceWorker !== 'undefined') {
+          navigator.serviceWorker.register('pwabuilder-sw.js')
         }
       </script>
 </body>
