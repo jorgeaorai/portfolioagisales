@@ -22,50 +22,61 @@ class InteractiveMap {
   async init() {
     if (!this.container) return;
     
-    // Inject SVG
-    let pathsHtml = '';
-    for (const [id, d] of Object.entries(BRAZIL_SVG_PATHS)) {
-      const isOffice = BRAZIL_OFFICES[id] ? 'active-office' : '';
-      pathsHtml += `<path id="${id}" class="map-state ${isOffice}" d="${d}" />`;
+    try {
+      // Fetch the original mapa project index.html
+      const response = await fetch('mapa/dist/index.html');
+      const htmlText = await response.text();
+      
+      // Parse the HTML to extract the SVG
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      const svgElement = doc.querySelector('svg#map');
+      
+      if (svgElement) {
+        // Clean up display and styling for injection
+        svgElement.style.display = 'block';
+        svgElement.style.width = '100%';
+        svgElement.style.height = 'auto';
+        
+        // Remove unwanted circles and full-name labels from the original SVG
+        svgElement.querySelectorAll('.icon_state, .label_state').forEach(el => el.remove());
+        
+        // Inject SVG
+        this.container.innerHTML = '';
+        this.container.appendChild(svgElement);
+        
+        // Mark active offices in the DOM
+        this.markActiveOffices();
+        
+        // Initialize events
+        this.setupEventListeners();
+        
+        console.log('Interactive map loaded successfully without markers');
+      } else {
+        throw new Error('SVG not found in mapa project');
+      }
+    } catch (error) {
+      console.error('Error loading interactive map:', error);
+      this.container.innerHTML = `<div class="map-error">Erro ao carregar o mapa interativo.</div>`;
     }
-
-    this.container.innerHTML = `
-      <svg viewBox="0 0 650 650" xmlns="http://www.w3.org/2000/svg">
-        <g class="map-group">
-          ${pathsHtml}
-        </g>
-      </svg>
-    `;
-    
-    this.renderPins();
-    this.setupEventListeners();
   }
 
-  renderPins() {
-    BRAZIL_STATES.forEach(state => {
-      const pin = document.createElement('div');
-      pin.className = `map-pin ${state.office ? 'office-pin' : ''}`;
-      pin.style.left = `${state.x}%`;
-      pin.style.top = `${state.y}%`;
-      pin.dataset.id = state.id;
-      
-      if (state.office) {
-        pin.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.showOffice(state.id);
-        });
+  markActiveOffices() {
+    document.querySelectorAll('.state').forEach(stateEl => {
+      const stateId = stateEl.dataset.state?.toUpperCase();
+      if (stateId && BRAZIL_OFFICES[stateId]) {
+        stateEl.classList.add('active-office');
       }
-      
-      this.container.appendChild(pin);
     });
   }
 
   setupEventListeners() {
-    // Listen for state clicks
-    document.querySelectorAll('.map-state').forEach(path => {
-      path.addEventListener('click', () => {
-        const stateId = path.id;
-        if (BRAZIL_OFFICES[stateId]) {
+    // Listen for state clicks on the dynamically injected SVG
+    this.container.querySelectorAll('.state').forEach(stateEl => {
+      stateEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        const stateId = stateEl.dataset.state?.toUpperCase();
+        if (stateId && BRAZIL_OFFICES[stateId]) {
           this.showOffice(stateId);
         }
       });
