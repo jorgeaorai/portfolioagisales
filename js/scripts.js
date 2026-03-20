@@ -1,4 +1,4 @@
-﻿( function($) {
+( function($) {
   'use strict';
 
 
@@ -160,10 +160,12 @@
     navbar();
 
     if ($('.pagepiling').length > 0){
-      	$('.pagepiling').pagepiling({
+      $('.pagepiling').pagepiling({
     		scrollingSpeed: 280,
-		    loopBottom:true,
-		    anchors: ['page1', 'page2', 'page3', 'page4', 'page5', 'page6', 'page7', 'page8'],
+		    sectionSelector: '.section',
+		    loopBottom: false,
+		    loopTop: false,
+		    anchors: ['page1', 'page1-2', 'page3', 'page4-2', 'page4', 'page5', 'page7'],
 		    afterLoad: function(anchorLink, index){
 	           navbarFullpage();
 	            

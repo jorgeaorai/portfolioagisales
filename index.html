@@ -23,7 +23,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet">
+  <link href="css/owl.carousel.min.css" rel="stylesheet">
   <link href="css/notes.css" rel="stylesheet" media="screen">
+  <link href="css/map.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet" media="screen">
   <style>
     body {
@@ -133,8 +135,6 @@
                             </span> <span style="font-weight: 300;">
                               muda tudo.
                             </span></h1>
-                          <a class="popup-youtube" href="http://www.youtube.com/watch?v=0O2aH4XLbto"><span
-                              class="icon ion-ios-play"></span>Assista o vídeo </a>
                         </div>
                       </div>
                     </div>
@@ -161,6 +161,8 @@
                             </span> <span style="font-weight: 300;">
                               não precisa fazer isso sozinho.
                             </span></h1>
+                          <a class="popup-youtube" href="http://www.youtube.com/watch?v=0O2aH4XLbto"><span
+                              class="icon ion-ios-play"></span>Assista o vídeo </a>
                         </div>
                       </div>
                     </div>
@@ -183,90 +185,92 @@
                   <div class="container">
                     <div class="intro">
                       <div class="row justify-content-center">
-                        <div class="col-md-10 fadeY fadeY-1">
-                          <h2 class="resume-header title text-center mb-5 pb-4">Uma trajetória marcada por evolução e
-                            resultados.</h2>
-                          <div class="col-resume p-4 p-md-5 rounded">
-                            <div class="resume-content">
-                              <div class="resume-inner">
-                                <!-- Item 1 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 1"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 1</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">January 2020</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                        <div class="col-12 fadeY fadeY-1">
+                          <!-- Timeline Horizontal Carrossel -->
+                          <div class="timeline-carousel-wrapper">
+                            <div class="timeline-track" id="timeline-track">
+                              <!-- Item 1 -->
+                              <div class="timeline-item" data-index="0" data-bg="images/uploads/1773858987498.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 1">
                                 </div>
-                                <!-- Item 2 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 2"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 2</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">December 2020</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2018</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 1</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
                                 </div>
-                                <!-- Item 3 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 3"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 3</h6>
-                                    <i class="resume-study d-block mb-2" style="opacity: 0.8; font-size: 0.9rem;">July
-                                      2021</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                              </div>
+                              <!-- Item 2 -->
+                              <div class="timeline-item" data-index="1" data-bg="images/uploads/1773860007268.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 2">
                                 </div>
-                                <!-- Item 4 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 4"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 4</h6>
-                                    <i class="resume-study d-block mb-2" style="opacity: 0.8; font-size: 0.9rem;">March
-                                      2022</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2019</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 2</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
                                 </div>
-                                <!-- Item 5 -->
-                                <div class="resume-row d-flex flex-column flex-md-row align-items-md-start">
-                                  <img src="images/bg/about.jpg" alt="Timeline 5"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 5</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">Present</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                              </div>
+                              <!-- Item 3 -->
+                              <div class="timeline-item" data-index="2" data-bg="images/uploads/1773860024516.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 3">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2020</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 3</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
+                                </div>
+                              </div>
+                              <!-- Item 4 -->
+                              <div class="timeline-item" data-index="3" data-bg="images/uploads/1773860029498.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 4">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2021</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 4</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
+                                </div>
+                              </div>
+                              <!-- Item 5 -->
+                              <div class="timeline-item" data-index="4" data-bg="images/uploads/1773860034857.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 5">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2022</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 5</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
+                                </div>
+                              </div>
+                              <!-- Item 6 -->
+                              <div class="timeline-item" data-index="5" data-bg="images/uploads/1773853736279.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/bg/about.jpg" alt="Placeholder 6">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">Hoje</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Event Title 6</h6>
+                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                                    do eiusmod tempor.</p>
                                 </div>
                               </div>
                             </div>
@@ -295,8 +299,11 @@
                         <div class="col-lg-6 offset-xl-1">
                           <div class="map-container"
                             style="position: relative; width: 100%; max-width: 800px; aspect-ratio: 1/1; margin: 0 auto;">
-                            <img src="images/Brazil_Blank_Map.svg" alt="Brazil Map"
-                              style="width: 100%; height: 100%; object-fit: contain;">
+                            <div class="map-3d-wrapper">
+                                <div id="map-3d-container" class="map-3d-container">
+                                    <!-- SVG will be injected here -->
+                                </div>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-5 mt-5 mt-xl-0">
@@ -452,106 +459,61 @@
           </div>
         </div>
       </div>
-      <div data-anchor="page6" class="pp-scrollable section section-6">
+      <div data-anchor="page7" class="pp-scrollable text-white section section-7">
         <div class="scroll-wrap">
+          <div class="section-bg" style="background-image:url(images/uploads/1773860338864.jpg);"></div>
+          <div class="bg-quote"></div>
           <div class="scrollable-content">
-            <div class="vertical-title text-white d-none d-lg-block"><span>parceiros</span></div>
+            <div class="vertical-title d-none d-lg-block"><span>informações</span></div>
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
                 <div class="boxed">
                   <div class="container">
                     <div class="intro">
-                      <h2 class="title text-white"><span class="text-primary">Trabalhamos</span> com grandes marcas</h2>
-                      <div class="row row-partners justify-content-center">
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="api.saúde" src="images/api.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Ficabem" src="images/fica.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Predicta" src="images/predicta.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Clin" src="images/clin.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="star" src="images/star.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Audicore" src="images/audi.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div data-anchor="page7" class="pp-scrollable text-white section section-7">
-            <div class="scroll-wrap">
-              <div class="section-bg" style="background-image:url(images/uploads/1773860338864.jpg);">
-              </div>
-              <div class="bg-quote"></div>
-              <div class="scrollable-content">
-                <div class="vertical-title  d-none d-lg-block"><span>informações</span></div>
-                <div class="vertical-centred">
-                  <div class="boxed boxed-inner">
-                    <div class="boxed">
-                      <div class="container">
-                        <div class="intro">
-                          <div class="review-carousel owl-carousel">
-                            <div class="review-carousel-item">
-                              <!-- Botão Grande de Anotações -->
-                              <div class="review-row mb-5">
-                                <div class="row">
-                                  <div class="col-12">
-                                    <div class="btn-notes-trigger" style="margin: 0;">
-                                      Anotações
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="review-row">
-                                <div class="row">
-                                  <div class="col-md-5">
-                                    <div class="review-author">
-                                      <div class="author-name">Agilidade e inteligência</div>
-                                      <i>em soluções sob medida</i>
-                                    </div>
-                                  </div>
-                                  <div class="col-md-7 text">
-                                    <p>Sua empresa cresce quando as pessoas crescem.
-                                      Nossos benefícios fazem isso acontecer com zero burocracia e máxima eficiência.
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="review-row">
-                                <div class="row">
-                                  <div class="col-md-5">
-                                    <div class="review-author">
-                                      <div class="author-name">Contato</div>
-                                      <i>entre em contato conosco</i>
-                                    </div>
-                                  </div>
-                                  <div class="col-md-7 text">
-                                    <p>
-                                      <www class="agisales com br"></www>
-                                    </p>
-                                  </div>
+                      <div class="review-carousel owl-carousel">
+                        <div class="review-carousel-item">
+                          <!-- Botão Grande de Anotações -->
+                          <div class="review-row mb-5">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="btn-notes-trigger" style="margin: 0;">
+                                  Anotações
                                 </div>
                               </div>
                             </div>
-
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Agilidade e inteligência</div>
+                                  <i>em soluções sob medida</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>Sua empresa cresce quando as pessoas crescem.
+                                  Nossos benefícios fazem isso acontecer com zero burocracia e máxima eficiência.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Contato</div>
+                                  <i>entre em contato conosco</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>
+                                  <www class="agisales com br"></www>
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
@@ -561,62 +523,119 @@
           </div>
         </div>
       </div>
-      <!-- jQuery -->
+    </div><!-- end pagepiling -->
 
-      <script src="js/jquery.min.js"></script>
-      <script src="js/wow.min.js"></script>
-      <script src="js/smoothscroll.js"></script>
-      <script src="js/animsition.js"></script>
-      <script src="js/jquery.validate.min.js"></script>
-      <script src="js/jquery.magnific-popup.min.js"></script>
-      <script src="js/owl.carousel.min.js"></script>
-      <script src="js/jquery.pagepiling.min.js"></script>
+    <!-- Floating Pencil Button -->
+    <button id="fab-pencil" title="Ativar desenho">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+      </svg>
+    </button>
 
-      <!-- Modal Anotações Tela Cheia -->
-      <div id="notes-modal">
-        <div class="notes-toolbar">
-          <div class="mac-controls">
-            <button class="mac-btn mac-close" title="Fechar"></button>
-            <button class="mac-btn mac-minimize"></button>
-            <button class="mac-btn mac-maximize"></button>
-          </div>
-          <div class="toolbar-tools">
-            <button class="tool-btn active" data-tool="pen">✏️ Caneta</button>
-            <button class="tool-btn" data-tool="text">🔤 Texto</button>
-            <button class="tool-btn" data-tool="eraser">🧹 Borracha</button>
-          </div>
-          <div class="color-picker">
-            <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
-            <div class="color-swatch" data-color="#ff3b30" style="background-color: #ff3b30;"></div>
-            <div class="color-swatch" data-color="#007aff" style="background-color: #007aff;"></div>
-            <div class="color-swatch" data-color="#34c759" style="background-color: #34c759;"></div>
-            <div class="color-swatch" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
-          </div>
-          <div class="stroke-picker" style="margin-left: 15px;">
-            <select id="stroke-width">
-              <option value="2">Fino</option>
-              <option value="5" selected>Médio</option>
-              <option value="10">Grosso</option>
-              <option value="20">Extragrosso</option>
-            </select>
-          </div>
-          <div class="toolbar-actions">
-            <button class="action-btn" id="btn-clear">Limpar Tudo</button>
-          </div>
+    <!-- Drawing Overlay -->
+    <div id="drawing-overlay">
+      <div class="drawing-toolbar">
+        <div class="dtb-group">
+          <button class="dtb-tool active" data-tool="pen">&#9999;&#65039; Caneta</button>
+          <button class="dtb-tool" data-tool="eraser">&#129529; Borracha</button>
+          <button class="dtb-tool" data-tool="text">&#128288;&#65039; Texto</button>
         </div>
-        <div class="canvas-container">
-          <textarea id="text-input-overlay" placeholder="Digite e aperte Enter..."></textarea>
+        <div class="dtb-group dtb-colors">
+          <div class="dtb-color active" data-color="#ffffff" style="background:#ffffff;"></div>
+          <div class="dtb-color" data-color="#11afdc" style="background:#11afdc;"></div>
+          <div class="dtb-color" data-color="#ff3b30" style="background:#ff3b30;"></div>
+          <div class="dtb-color" data-color="#34c759" style="background:#34c759;"></div>
+          <div class="dtb-color" data-color="#ffcc00" style="background:#ffcc00;"></div>
+          <div class="dtb-color" data-color="#000000" style="background:#000000;"></div>
+        </div>
+        <div class="dtb-group">
+          <label style="color:#fff;font-size:12px;margin-right:4px;">Espessura</label>
+          <select id="dtb-stroke">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extra</option>
+          </select>
+        </div>
+        <div class="dtb-group">
+          <button id="dtb-clear" class="dtb-action">Limpar</button>
+          <button id="dtb-close" class="dtb-action dtb-close-btn">&#10005; Fechar</button>
         </div>
       </div>
+      <canvas id="drawing-canvas"></canvas>
+      <textarea id="dtb-text-input" placeholder="Digite aqui..."></textarea>
+    </div>
 
-      <!-- Scripts -->
-      <script src="js/scripts.js"></script>
-      <script src="js/notes.js"></script>
-      <script>
-        if (typeof navigator.serviceWorker !== 'undefined') {
-          navigator.serviceWorker.register('pwabuilder-sw.js')
-        }
-      </script>
+    <!-- jQuery -->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/smoothscroll.js"></script>
+    <script src="js/animsition.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.pagepiling.min.js"></script>
+
+    <!-- Modal Anotações Tela Cheia -->
+    <div id="notes-modal">
+      <div class="notes-toolbar">
+        <div class="mac-controls">
+          <button class="mac-btn mac-close" title="Fechar"></button>
+          <button class="mac-btn mac-minimize"></button>
+          <button class="mac-btn mac-maximize"></button>
+        </div>
+        <div class="toolbar-tools">
+          <button class="tool-btn active" data-tool="pen">✏️ Caneta</button>
+          <button class="tool-btn" data-tool="text">🔤 Texto</button>
+          <button class="tool-btn" data-tool="eraser">🧹 Borracha</button>
+        </div>
+        <div class="color-picker">
+          <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
+          <div class="color-swatch" data-color="#ff3b30" style="background-color: #ff3b30;"></div>
+          <div class="color-swatch" data-color="#007aff" style="background-color: #007aff;"></div>
+          <div class="color-swatch" data-color="#34c759" style="background-color: #34c759;"></div>
+          <div class="color-swatch" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
+        </div>
+        <div class="stroke-picker" style="margin-left: 15px;">
+          <select id="stroke-width">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extragrosso</option>
+          </select>
+        </div>
+        <div class="toolbar-actions">
+          <button class="action-btn" id="btn-clear">Limpar Tudo</button>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <textarea id="text-input-overlay" placeholder="Digite e aperte Enter..."></textarea>
+      </div>
+    </div>
+
+    <!-- Office Popup -->
+    <div id="popup-overlay"></div>
+    <div id="office-popup">
+        <button class="popup-close">&times;</button>
+        <div class="popup-header"></div>
+        <div class="popup-body">
+            <h3 class="popup-title"></h3>
+            <p class="popup-desc"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/scripts.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/map-data.js"></script>
+    <script src="js/map.js"></script>
+    <script>
+      if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+      }
+    </script>
 </body>
 
 </html>
