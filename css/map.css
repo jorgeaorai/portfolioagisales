@@ -20,6 +20,11 @@
   display: block;
 }
 
+#map a, #map a:hover {
+  text-decoration: none !important;
+  outline: none;
+}
+
 #map .state {
   cursor: pointer;
 }
@@ -40,7 +45,7 @@
 
 #map .state .label_icon_state {
   fill: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 10px;
   pointer-events: none;
   opacity: 0.5;
@@ -174,6 +179,7 @@
   font-size: 16px;
   line-height: 1.6;
   color: #ccc;
+  white-space: pre-line;
 }
 
 /* Background Overlay */

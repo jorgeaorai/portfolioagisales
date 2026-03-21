@@ -29,6 +29,7 @@
       font-family: 'Montserrat', sans-serif !important;
       font-size: 16px !important;
       font-weight: 400 !important;
+      background-color: #050a12 !important;
     }
 
     h1,
@@ -54,14 +55,29 @@
       visibility: hidden;
       transition: all 0.5s ease;
     }
-    
+
     .brand {
       transition: all 0.5s ease;
+    }
+
+    #bgvid {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -100;
+      transform: translateX(-50%) translateY(-50%);
+      background-size: cover;
+      transition: 1s opacity;
+      object-fit: cover;
     }
   </style>
 </head>
 
-<body>
+<body class="pp-viewing-page1">
   <div class="animsition">
     <div class="loader">
       <div class="spinner">
@@ -129,7 +145,9 @@
     <div class="pagepiling">
       <div data-anchor="page1" class="pp-scrollable text-white section section-1">
         <div class="scroll-wrap">
-          <div class="section-bg" style="background-image:url(images/uploads/1773853736279.jpg);"></div>
+          <video autoplay muted loop playsinline id="bgvid">
+            <source src="images/videobg.mp4" type="video/mp4">
+          </video>
           <div class="scrollable-content">
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
@@ -138,11 +156,7 @@
                     <div class="intro">
                       <div class="row">
                         <div class="col-md-8 col-lg-6">
-                          <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
-                              A decisão certa
-                            </span> <span style="font-weight: 300;">
-                              muda tudo.
-                            </span></h1>
+
                         </div>
                       </div>
                     </div>
@@ -155,7 +169,7 @@
       </div>
       <div data-anchor="page1-2" class="pp-scrollable text-white section section-1-2">
         <div class="scroll-wrap">
-          <div class="section-bg" style="background-image:url(images/uploads/1773854814257.png);"></div>
+          <div class="section-bg" style="background-image:url(images/uploads/bgsec2.jpg);"></div>
           <div class="scrollable-content">
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
@@ -165,12 +179,12 @@
                       <div class="row">
                         <div class="col-md-8 col-lg-6">
                           <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
-                              E você
+                              Agir agora,
                             </span> <span style="font-weight: 300;">
-                              não precisa fazer isso sozinho.
+                              pensando no futuro.
                             </span></h1>
-                          <a class="popup-youtube" href="http://www.youtube.com/watch?v=0O2aH4XLbto"><span
-                              class="icon ion-ios-play"></span>Assista o vídeo </a>
+                          - <a class="popup-video" href="images/agivideo1.mp4"><span <a class="popup-video"
+                              href="#video-popup"><span class="icon ion-ios-play"></span>Assista o vídeo </a>
                         </div>
                       </div>
                     </div>
@@ -333,16 +347,19 @@
                             </p>
                             <p>Nossa capilaridade nos permite estar próximos, entendendo contextos e oferecendo
                               respostas mais assertivas.</p>
-                            
+
                             <div class="mt-4">
                               <div class="mb-3">
-                                <img src="images/office_team.png" alt="Equipe" class="rounded shadow-sm" style="width: 400px; height: 115px; object-fit: cover; max-width: 100%; display: block;">
+                                <img src="images/empresas.png" alt="Equipe" class="rounded shadow-sm"
+                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
                               </div>
                               <div class="mb-3">
-                                <img src="images/national_presence.png" alt="Presença Nacional" class="rounded shadow-sm" style="width: 400px; height: 115px; object-fit: cover; max-width: 100%; display: block;">
+                                <img src="images/vidas.png" alt="Presença Nacional" class="rounded shadow-sm"
+                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
                               </div>
                               <div class="mb-3">
-                                <img src="images/partnership.png" alt="Parceria" class="rounded shadow-sm" style="width: 400px; height: 115px; object-fit: cover; max-width: 100%; display: block;">
+                                <img src="images/faturamento.png" alt="Parceria" class="rounded shadow-sm"
+                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
                               </div>
                             </div>
                           </div>
@@ -358,7 +375,7 @@
       </div>
       <div data-anchor="page4" class="pp-scrollable section section-4">
         <div class="scroll-wrap">
-          <div class="section-bg bg-about" style="background-image:url(images/uploads/1773859346187.jpg);"></div>
+          <div class="section-bg bg-about" style="background-image:url(images/advisor1.jpg);"></div>
           <div class="scrollable-content">
             <div class="vertical-title text-white  d-none d-lg-block"><span>advisor</span></div>
             <div class="vertical-centred">
@@ -404,67 +421,57 @@
       </div>
       <div data-anchor="page6" class="pp-scrollable section section-6 section-solutions text-white">
         <div class="solutions-bg-container">
-          <div class="section-bg solutions-bg-overlay active" style="background-image: url('images/uploads/1773858987498.jpg');" data-index="0"></div>
-          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/uploads/1773860007268.jpg');" data-index="1"></div>
-          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/uploads/1773860024516.jpg');" data-index="2"></div>
-          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/uploads/1773860029498.jpg');" data-index="3"></div>
-          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/uploads/1773860034857.jpg');" data-index="4"></div>
-          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/uploads/1773853736279.jpg');" data-index="5"></div>
+          <div class="section-bg solutions-bg-overlay active"
+            style="background-image: url('images/odontologia.jpg');" data-index="0"></div>
+          <div class="section-bg solutions-bg-overlay"
+            style="background-image: url('images/telemedicina.jpg');" data-index="1"></div>
+          <div class="section-bg solutions-bg-overlay"
+            style="background-image: url('images/seguro.jpg');" data-index="2"></div>
+          <div class="section-bg solutions-bg-overlay"
+            style="background-image: url('images/cartao.jpg');" data-index="3"></div>
+          <div class="section-bg solutions-bg-overlay"
+            style="background-image: url('images/nr1.jpg');" data-index="4"></div>
+          <div class="section-bg solutions-bg-overlay"
+            style="background-image: url('images/bemestar.jpg');" data-index="5"></div>
         </div>
         <div class="scroll-wrap">
           <div class="vertical-title text-white d-none d-lg-block"><span>soluções</span></div>
-          
+
           <div class="vertical-centred">
             <div class="boxed boxed-inner">
               <div class="container">
                 <div class="solutions-container">
                   <canvas id="ai-visualizer" width="500" height="500"></canvas>
                   <div class="solution-central-text">Odontologia</div>
-                  
+
                   <div class="solutions-circle-nav">
                     <!-- Odonto -->
                     <div class="solution-item active" data-index="0" data-name="Odontologia">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M7.5 10c0-1.5 1.5-3 3.5-3s3.5 1.5 3.5 3c0 1.5-1 4-2 5.5s-1.5 1.5-1.5 1.5-0.5 0-1.5-1.5-2-4-2-5.5z"/>
-                        <path d="M10.5 7v-2a2 2 0 0 1 4 0v2"/>
-                        <circle cx="12" cy="11" r="1"/>
-                      </svg>
+                      <img src="images/iconodontologia.png" alt="Odontologia">
                     </div>
                     <!-- Telemedicina -->
                     <div class="solution-item" data-index="1" data-name="Telemedicina">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                        <path d="M12 18h.01"/>
-                        <path d="M9 10h6M12 7v6"/>
-                      </svg>
+                      <img src="images/icontelemedicina.png" alt="Telemedicina">
                     </div>
                     <!-- Seguro de vida -->
                     <div class="solution-item" data-index="2" data-name="Seguro de Vida">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.66-8.66 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                      </svg>
+                      <img src="images/iconseguro.png" alt="Seguro de Vida">
                     </div>
                     <!-- Cartão de descontos -->
                     <div class="solution-item" data-index="3" data-name="Cartão de Descontos">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="5" width="20" height="14" rx="2"/>
-                        <path d="M2 10h20"/>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
                       </svg>
                     </div>
                     <!-- NR1 -->
                     <div class="solution-item" data-index="4" data-name="NR1">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M12 8v8"/>
-                        <path d="M9 11h6"/>
-                      </svg>
+                      <img src="images/iconnr1.png" alt="NR1">
                     </div>
                     <!-- Bem estar -->
                     <div class="solution-item" data-index="5" data-name="Bem Estar">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z"/>
-                        <path d="M12 7c-2 0-3.5 1.5-3.5 3s1.5 3 3.5 3 3.5 1.5 3.5 3-1.5 3-3.5 3"/>
-                      </svg>
+                      <img src="images/iconbemestar.png" alt="Bem Estar">
                     </div>
                   </div>
                 </div>
@@ -637,6 +644,18 @@
       <div class="popup-body">
         <h3 class="popup-title"></h3>
         <p class="popup-desc"></p>
+      </div>
+    </div>
+
+    <!-- Video Popup (Custom) -->
+    <div id="video-popup-overlay"></div>
+    <div id="video-popup">
+      <button class="video-popup-close">&times;</button>
+      <div class="video-popup-body">
+        <video id="main-video" controls width="100%">
+          <source src="images/agivideo1.mp4" type="video/mp4">
+          Seu navegador não suporta vídeos.
+        </video>
       </div>
     </div>
 

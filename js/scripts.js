@@ -65,6 +65,23 @@
 		fixedContentPos: false
 	});
 
+	$(document).on('click', '.popup-video', function(e) {
+		e.preventDefault();
+		$('#video-popup, #video-popup-overlay').addClass('show');
+		var video = $('#main-video')[0];
+		if (video) {
+			video.play();
+		}
+	});
+
+	$(document).on('click', '.video-popup-close, #video-popup-overlay', function() {
+		$('#video-popup, #video-popup-overlay').removeClass('show');
+		var video = $('#main-video')[0];
+		if (video) {
+			video.pause();
+		}
+	});
+
 
 	/*-------------------------------------------------------------------------------
 	  Menu

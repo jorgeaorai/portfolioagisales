@@ -16,7 +16,7 @@ class SolutionsController {
         this.ctx = this.canvas.getContext('2d');
         this.dots = [];
         this.dotCount = 200;
-        this.radius = 250; // Radius for the circular layout
+        this.radius = 250; // Radius for the circular layout (exactly matches the 500px circle line)
         this.visualizerActive = false;
         
         this.init();
@@ -38,8 +38,8 @@ class SolutionsController {
         const count = this.items.length;
         this.items.forEach((item, index) => {
             const angle = (index * (360 / count) - 90) * (Math.PI / 180);
-            const x = 300 + this.radius * Math.cos(angle);
-            const y = 300 + this.radius * Math.sin(angle);
+            const x = 250 + this.radius * Math.cos(angle);
+            const y = 250 + this.radius * Math.sin(angle);
             
             item.style.left = `${x}px`;
             item.style.top = `${y}px`;
@@ -149,6 +149,10 @@ class SolutionsController {
 }
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
     new SolutionsController();
-});
+} else {
+    document.addEventListener('DOMContentLoaded', () => {
+        new SolutionsController();
+    });
+}

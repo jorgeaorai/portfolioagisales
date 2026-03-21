@@ -1,38 +1,38 @@
 const BRAZIL_OFFICES = {
   "CE": {
     name: "Ceará",
-    photo: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800",
-    description: "Nossa sede estratégica no Ceará, atendendo a região Nordeste com foco em inovação e consultoria empresarial personalizada."
+    photo: "images/agice.jpg",
+    description: "Nossa sede estratégica no Ceará, atendendo a região Nordeste com foco em inovação e consultoria empresarial personalizada.\n\nEndereço: Rua Doutor José Lourenço, Nº 870 - Aldeota - CEP: 60115-280\n4º Andar, Sala 401"
   },
   "PB": {
     name: "Paraíba",
-    photo: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=800",
-    description: "Presença consolidada na Paraíba, oferecendo soluções ágeis para o ecossistema de saúde e benefícios locais."
+    photo: "images/agipb.jpg",
+    description: "Presença consolidada na Paraíba, oferecendo soluções ágeis para o ecossistema de saúde e benefícios locais.\n\nEndereço: R. Empresário João Rodrigues Alves, 125 - Bancários, João Pessoa - PB, 58051-022"
   },
   "PE": {
     name: "Pernambuco",
-    photo: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=800",
-    description: "Atuação destacada em Pernambuco, conectando empresas tradicionais ao futuro digital e gestão de vidas eficiente."
+    photo: "images/agipe.jpg",
+    description: "Atuação destacada em Pernambuco, conectando empresas tradicionais ao futuro digital e gestão de vidas eficiente.\n\nEndereço: R. do Espinheiro, 160 - Graças, Recife - PE, 52020-213"
   },
   "RN": {
     name: "Rio Grande do Norte",
-    photo: "https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&q=80&w=800",
-    description: "Centro de excelência operacional no RN, garantindo proximidade e suporte técnico especializado para nossos parceiros."
+    photo: "images/agirn.jpg",
+    description: "Centro de excelência operacional no RN, garantindo proximidade e suporte técnico especializado para nossos parceiros.\n\nEndereço: Av. Amintas Barros, 3700 - Lagoa Nova"
   },
   "PI": {
     name: "Piauí",
-    photo: "https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=800",
-    description: "Expandindo horizontes no Piauí, com foco em capilaridade e atendimento consultivo direto ao empreendedor."
+    photo: "images/agipi.jpg",
+    description: "Expandindo horizontes no Piauí, com foco em capilaridade e atendimento consultivo direto ao empreendedor.\n\nEndereço: Av. ELIAS JOAO TAJRA N° 864\nBairro Jockey\nCEP 64049-300"
   },
   "AL": {
     name: "Alagoas",
-    photo: "https://images.unsplash.com/photo-1497215641119-8696eb7f401d?auto=format&fit=crop&q=80&w=800",
-    description: "Atendimento regional em Alagoas, focado em soluções customizadas para o setor corporativo e industrial."
+    photo: "images/agial.jpg",
+    description: "Atendimento regional em Alagoas, focado em soluções customizadas para o setor corporativo e industrial.\n\nEndereço: Av. Álvaro Otacílio, 3731 - Sala 906 Clin / Bairro Jatiúca, Maceió - AL, 57036-850"
   },
   "GO": {
     name: "Goiás",
-    photo: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800",
-    description: "Ponto focal na região Centro-Oeste, o escritório de Goiás é peça chave na nossa logística nacional e atendimento regional."
+    photo: "images/agigo.jpg",
+    description: "Ponto focal na região Centro-Oeste, o escritório de Goiás é peça chave na nossa logística nacional e atendimento regional.\n\nEndereço: AV DEP JAMEL CECILIO, QD. B26, L. 16/17, N° 2690, SALA 1910, JARDIM GOIÁS, CEP: 74810-100"
   }
 };
 
