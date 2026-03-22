@@ -62,17 +62,144 @@
 
     #bgvid {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: -100;
-      transform: translateX(-50%) translateY(-50%);
-      background-size: cover;
-      transition: 1s opacity;
       object-fit: cover;
+      transition: 1s opacity;
+    }
+
+    /* Big Numbers Section */
+    .big-numbers-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 15px;
+      margin-bottom: 30px;
+      width: 100%;
+      padding-top: 10px; /* Space for hover transform */
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE and Edge */
+    }
+
+    .big-numbers-row::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+    .big-number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      text-align: center;
+      min-width: 180px;
+      flex: 1;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .big-number-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #11afdc;
+      transform: translateY(-5px);
+    }
+
+    .big-number-value {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #11afdc;
+      margin-bottom: 5px;
+    }
+
+    .big-number-label {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.2;
+    }
+
+    /* Map Legend */
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .legend-box.office {
+      border: 1px solid #fff;
+      background: transparent;
+    }
+
+    .legend-box.coverage {
+      background: rgba(17, 175, 220, 0.4);
+      border: 1px solid #11afdc;
+    }
+
+    /* Map Interaction Styles */
+    #map-3d-container svg .state {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state .shape {
+      fill: rgba(17, 175, 220, 0.15);
+      stroke: transparent;
+      stroke-width: 0;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state.active-office .shape {
+      fill: transparent;
+      stroke: transparent;
+      stroke-width: 0;
+    }
+
+    #map-3d-container svg .state:hover .shape {
+      fill: rgba(255, 255, 255, 0.1);
+      stroke: #11afdc;
+      stroke-width: 2px;
+    }
+
+    #map-3d-container svg .label_icon_state {
+      fill: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .big-number-card {
+        min-width: 140px;
+        padding: 10px;
+      }
+
+      .big-number-value {
+        font-size: 1.4rem;
+      }
     }
   </style>
 </head>
@@ -174,9 +301,9 @@
                       <div class="row">
                         <div class="col-md-8 col-lg-6">
                           <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
-                              Agir agora,
+                              Estratégia
                             </span> <span style="font-weight: 300;">
-                              pensando no futuro.
+                              não se explica. Se constrói.
                             </span></h1>
                           - <a class="popup-video" href="images/agivideo1.mp4"><span <a class="popup-video"
                               href="#video-popup"><span class="icon ion-ios-play"></span>Assista o vídeo </a>
@@ -207,87 +334,104 @@
                           <div class="timeline-carousel-wrapper">
                             <div class="timeline-track" id="timeline-track">
                               <!-- Item 1 -->
-                              <div class="timeline-item" data-index="0" data-bg="images/uploads/1773858987498.jpg">
+                              <div class="timeline-item" data-index="0" data-bg="images/ortoclin.jpg">
                                 <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 1">
+                                  <img src="images/joaquim.jpg" alt="Placeholder 1">
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-dot"></div>
-                                <div class="timeline-year">2018</div>
+                                <div class="timeline-year">1997</div>
                                 <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 1</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
+                                  <h6 class="timeline-title">Nasce um sonho</h6>
+                                  <p class="timeline-text">Norteado pelo propósito de Dr. Jurandir Neves, seu pai, Dr.
+                                    Jurandir
+                                    Neves funda em Recife/PE a Ortonclin, guiado pela visão de ampliar e
+                                    transformar vidas através do cuidado odontológico.</p>
                                 </div>
                               </div>
                               <!-- Item 2 -->
-                              <div class="timeline-item" data-index="1" data-bg="images/uploads/1773860007268.jpg">
+                              <div class="timeline-item" data-index="1" data-bg="images/bgbreno.jpg">
                                 <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 2">
+                                  <img src="images/breno.jpg" alt="Placeholder 2">
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-dot"></div>
-                                <div class="timeline-year">2019</div>
+                                <div class="timeline-year">2010</div>
                                 <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 2</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
+                                  <h6 class="timeline-title">Uma nova visão sobre o futuro</h6>
+                                  <p class="timeline-text">Breno Neves, segunda geração, assume a presidência, também
+                                    dentista e
+                                    empreendedor, a empresa passa por uma transformação cultural e inicia uma
+                                    transformação digital que iria disruptar o negócio como um todo.
+                                  </p>
                                 </div>
                               </div>
                               <!-- Item 3 -->
-                              <div class="timeline-item" data-index="2" data-bg="images/uploads/1773860024516.jpg">
+                              <div class="timeline-item" data-index="2" data-bg="images/bgexpansao.jpg">
                                 <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 3">
+                                  <img src="images/expansao.jpg" alt="Placeholder 3">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2014</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Expandindo Fronteiras</h6>
+                                  <p class="timeline-text">Expandimos nossa operação, começando pelo Agreste/PE e depois
+                                    para o
+                                    Sertão/PE e alcançando todos os estados o Nordeste do Brasil e Goiás. Criando uma
+                                    operação com logística local, mas com abrangência Nacional.
+                                  </p>
+                                </div>
+                              </div>
+                              <!-- Item 4 -->
+                              <div class="timeline-item" data-index="3" data-bg="images/bgpandemia.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/pandemia.jpg" alt="Placeholder 4">
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-dot"></div>
                                 <div class="timeline-year">2020</div>
                                 <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 3</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
-                                </div>
-                              </div>
-                              <!-- Item 4 -->
-                              <div class="timeline-item" data-index="3" data-bg="images/uploads/1773860029498.jpg">
-                                <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 4">
-                                </div>
-                                <div class="timeline-connector"></div>
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-year">2021</div>
-                                <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 4</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
+                                  <h6 class="timeline-title">Contra as Estatísticas </h6>
+                                  <p class="timeline-text">Durante a crise global da COVID-19, enquanto muitos negócios
+                                    retraíram, alcançamos
+                                    um crescimento superior a 30% no ano, consolidando a nossa resiliência e capacidade
+                                    de adaptação ao inovarmos e criarmos soluções para os nossos clientes.</p>
                                 </div>
                               </div>
                               <!-- Item 5 -->
-                              <div class="timeline-item" data-index="4" data-bg="images/uploads/1773860034857.jpg">
+                              <div class="timeline-item" data-index="4" data-bg="images/bggptw.jpg">
                                 <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 5">
+                                  <img src="images/gptw.jpg" alt="Placeholder 5">
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-dot"></div>
-                                <div class="timeline-year">2022</div>
+                                <div class="timeline-year">2024</div>
                                 <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 5</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
+                                  <h6 class="timeline-title">A Fantástica Fábrica de Esticar Gente.</h6>
+                                  <p class="timeline-text">Após recebermos o prêmio GPTW (Great Place to Work) em 2019,
+                                    em
+                                    2024 através de consultoria promovida pela FIA, fomos reconhecidos como um
+                                    dos "Lugares Incríveis para Trabalhar". Reafirmando o nosso posicionamento como
+                                    uma empresa de cultura forte e acolhedora, transformando potencial em potência.</p>
                                 </div>
                               </div>
                               <!-- Item 6 -->
-                              <div class="timeline-item" data-index="5" data-bg="images/uploads/1773853736279.jpg">
+                              <div class="timeline-item" data-index="5" data-bg="images/bgagi.jpg">
                                 <div class="timeline-circle">
-                                  <img src="images/bg/about.jpg" alt="Placeholder 6">
+                                  <img src="images/agi.jpg" alt="Placeholder 6">
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-dot"></div>
-                                <div class="timeline-year">Hoje</div>
+                                <div class="timeline-year">2025</div>
                                 <div class="timeline-content">
-                                  <h6 class="timeline-title">Event Title 6</h6>
-                                  <p class="timeline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                    do eiusmod tempor.</p>
+                                  <h6 class="timeline-title">Nasce a Agisales. Soluções Sob Medidas.</h6>
+                                  <p class="timeline-text">Inconformado com o modelo retrógrado e pouco personalizável
+                                    que
+                                    o mercado ofertava benefícios para empresa. Breno Neves convida João Paulo Leite
+                                    para repensar o modelo de oferta de benefícios corporativos. Um ecossistema de
+                                    soluções
+                                    pensado para trazer algo sob medida para necessidade do cliente.</p>
                                 </div>
                               </div>
                             </div>
@@ -312,21 +456,50 @@
                 <div class="boxed">
                   <div class="container">
                     <div class="intro">
+                      <!-- Big Numbers Top (Full Width) -->
+                      <div class="big-numbers-row">
+                        <div class="big-number-card">
+                          <span class="big-number-value">26</span>
+                          <span class="big-number-label">estados abrangidos</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">10</span>
+                          <span class="big-number-label">unidades de negócios</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">6k+</span>
+                          <span class="big-number-label">empresas em nosso ecossistema</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">1.4M+</span>
+                          <span class="big-number-label">vidas sob gestão</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">R$ 100M+</span>
+                          <span class="big-number-label">em faturamento</span>
+                        </div>
+                      </div>
+
                       <div class="row align-items-center">
                         <div class="col-lg-6 offset-xl-1">
                           <div class="map-container"
                             style="position: relative; width: 100%; max-width: 800px; aspect-ratio: 1/1; margin: 0 auto;">
                             <div class="map-3d-wrapper">
                               <div id="map-3d-container" class="map-3d-container">
-                                <path class="shape"
-                                  d="m 85.966736,177.23229 c 1.199049,-0.9651 2.097067,-2.7261 3.353172,-3.17466 3.305207,-0.0661 7.758246,1.47554 11.389492,0.36112 3.70782,-1.13792 8.53877,-5.42599 9.4207,-6.82904 4.38755,-6.98014 5.02799,-8.65162 9.23711,-10.85562 2.40622,-1.25995 4.63756,-1.09996 8.10852,-0.80503 2.67991,0.22772 3.89841,4.02839 5.84072,5.56689 1.59248,1.2614 3.45147,2.25448 5.40357,2.81879 8.22025,2.37629 17.12739,2.07423 25.58727,2.10456 5.10856,-0.019 13.74027,-0.32558 15.28309,-1.3167 1.60111,-1.34103 3.56726,-16.80884 3.74129,-18.05051 -0.48584,-0.97818 -2.5308,-4.04833 -3.30135,-6.86727 -0.707,-2.58646 2.24806,-8.32967 3.57579,-10.88379 1.29514,-2.49141 4.30522,-8.71573 6.95306,-13.12034 1.62338,-3.54696 4.84872,-9.53017 7.39323,-15.2024 2.68904,-5.994415 5.46325,-9.236698 3.99576,-13.456964 -1.07366,-3.08766 -4.10398,-3.91473 -8.20282,-5.039217 -3.77151,-1.034686 -8.3815,-1.057561 -11.64202,-3.452932 -3.26066,-2.395478 -5.2466,-5.653555 -7.1127,-9.895583 -1.46623,-3.333053 -2.77581,-7.900294 -2.88061,-9.684285 -2.56762,-0.30482 -5.85484,-1.4376 -8.69084,0.01986 -3.88726,1.997714 -1.08178,7.288883 -5.92069,10.137036 -4.75349,2.797869 -6.74739,-1.219877 -9.87455,-0.190801 -3.12391,1.028009 -3.49067,5.763404 -7.82342,6.011231 -3.8635,0.220987 -6.34555,-2.519384 -8.06909,-4.99528 -5.45339,-7.833864 -1.11407,-18.971611 -5.45746,-27.469 -1.17847,-2.305564 -2.93591,-5.403241 -5.47072,-5.948141 -1.58797,-0.341362 -1.56698,0.39064 -3.79638,1.361051 l -4.03007,1.764383 0,1.411506 0,1.411507 -1.54343,1.323287 c -0.85747,0.705754 -3.42985,2.293698 -5.83074,3.352328 l -4.28731,2.029041 -3.172614,3.352328 c -3.515594,3.705205 -4.115818,3.969862 -4.115818,2.11726 0,-0.705754 -0.342984,-1.499726 -0.771715,-1.764383 l -0.771716,-0.529315 -3.344102,1.235068 -3.344102,1.235068 -3.344102,-2.558356 -3.344101,-2.558355 -1.543432,0 -1.543431,0 -0.514478,-3.616986 -0.514477,-3.616985 -1.543431,-1.940822 -1.543432,-1.940821 -2.572386,2.558356 -2.572386,2.558355 -1.114701,-0.970411 -1.1147,-0.97041 -1.629178,1.235068 -1.629178,1.235068 -7.974396,0 -7.974397,0 0,1.676164 c 0,0.970411 -0.257238,2.293698 -0.514477,3.087671 l -0.514477,1.411506 3.344102,0 c 3.432227,-0.287339 5.765931,1.085744 5.40201,4.499177 -0.449673,3.816457 -2.555383,2.831759 -4.801787,1.676164 -1.772088,0.705753 -3.544176,1.411507 -5.316264,2.11726 l 0,3.616985 0,3.616986 3.001117,2.999451 3.001117,2.999452 c -1.279263,1.388133 -0.381312,2.182174 0.428731,3.793424 l 1.286193,2.558355 c 1.796303,10.638115 -1.239304,30.646811 -6.430965,39.963281 -2.936421,-0.11653 -5.096036,-0.97162 -8.060143,-1.85261 -3.322682,3.82376 -8.668819,2.2321 -12.144213,3.53164 -1.750321,0.70001 -4.49055,3.43768 -4.49055,3.43768 -3.603215,1.45275 -5.181181,-1.38313 -6.919407,0.13356 -2.410594,2.10337 -1.48372,6.4061 -1.48372,9.48233 0.156812,3.08526 -1.019949,4.69688 -2.4008937,7.23397 0.5915266,5.53869 -3.8355555,6.47183 -5.2853015,11.76766 5.6456029,4.333 10.4135992,4.97732 16.6676682,5.99276 18.08602,2.93656 25.075134,6.33284 35.495774,10.50958 8.680602,3.47931 21.764427,9.54469 25.583782,11.51503 1.926577,-0.85389 3.289365,-2.05004 4.795403,-3.26223 z">
-                                </path>
-                                <text class="label_icon_state" x="95" y="112">AM</text>
-                                </a>
-                                <!-- ... (Paths abbreviated for clarity, I'll include all 27 paths in the actual write) -->
-                                </g>
-                                </svg>
+                                <!-- Map is dynamically loaded by map.js -->
                               </div>
+                            </div>
+                          </div>
+
+                          <!-- Map Legend Bottom -->
+                          <div class="map-legend">
+                            <div class="legend-item">
+                              <div class="legend-box office"></div>
+                              <span>Cobertura</span>
+                            </div>
+                            <div class="legend-item">
+                              <div class="legend-box coverage"></div>
+                              <span>Escritórios</span>
                             </div>
                           </div>
                         </div>
@@ -343,20 +516,7 @@
                             <p>Nossa capilaridade nos permite estar próximos, entendendo contextos e oferecendo
                               respostas mais assertivas.</p>
 
-                            <div class="mt-4">
-                              <div class="mb-3">
-                                <img src="images/empresas.png" alt="Equipe" class="rounded shadow-sm"
-                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
-                              </div>
-                              <div class="mb-3">
-                                <img src="images/vidas.png" alt="Presença Nacional" class="rounded shadow-sm"
-                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
-                              </div>
-                              <div class="mb-3">
-                                <img src="images/faturamento.png" alt="Parceria" class="rounded shadow-sm"
-                                  style="width: 300px;  object-fit: cover; max-width: 100%; display: block;">
-                              </div>
-                            </div>
+
                           </div>
                         </div>
                       </div>
@@ -384,9 +544,9 @@
                         </div>
                         <div class="col-lg-5 mt-5 mt-xl-0">
                           <h2 class="title"> <span class="text-primary">
-                              Proximidade
+                              Ao seu
                             </span> <span style="font-weight: 300;">
-                              que gera confiança
+                              lado, sempre.
                             </span></h2>
                           <div class="mt-4 text-light" style="font-size: 1.1rem; line-height: 1.8;">
                             <p>Valorizamos relações próximas e duradouras.</p>
@@ -416,18 +576,18 @@
       </div>
       <div data-anchor="page6" class="pp-scrollable section section-6 section-solutions text-white">
         <div class="solutions-bg-container">
-          <div class="section-bg solutions-bg-overlay active"
-            style="background-image: url('images/odontologia.jpg');" data-index="0"></div>
-          <div class="section-bg solutions-bg-overlay"
-            style="background-image: url('images/telemedicina.jpg');" data-index="1"></div>
-          <div class="section-bg solutions-bg-overlay"
-            style="background-image: url('images/seguro.jpg');" data-index="2"></div>
-          <div class="section-bg solutions-bg-overlay"
-            style="background-image: url('images/cartao.jpg');" data-index="3"></div>
-          <div class="section-bg solutions-bg-overlay"
-            style="background-image: url('images/nr1.jpg');" data-index="4"></div>
-          <div class="section-bg solutions-bg-overlay"
-            style="background-image: url('images/bemestar.jpg');" data-index="5"></div>
+          <div class="section-bg solutions-bg-overlay active" style="background-image: url('images/odontologia.jpg');"
+            data-index="0"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/telemedicina.jpg');"
+            data-index="1"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/seguro.jpg');"
+            data-index="2"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/cartao.jpg');"
+            data-index="3"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/nr1.jpg');" data-index="4">
+          </div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/bemestar.jpg');"
+            data-index="5"></div>
         </div>
         <div class="scroll-wrap">
           <div class="vertical-title text-white d-none d-lg-block"><span>soluções</span></div>

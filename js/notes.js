@@ -185,8 +185,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getDPos(e) {
     const rect = drawCanvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  let pendingPoints = [];
+  let rafPending = false;
+
+  function renderQueue() {
+    if (pendingPoints.length === 0) {
+      rafPending = false;
+      return;
+    }
+
+    dctx.beginPath();
+    dctx.lineCap = "round";
+    dctx.lineJoin = "round";
+    dctx.lineWidth = dTool === "eraser" ? dStroke * 4 : dStroke;
+    
+    if (dTool === "eraser") {
+      dctx.globalCompositeOperation = "destination-out";
+      dctx.strokeStyle = "rgba(0,0,0,1)";
+    } else {
+      dctx.globalCompositeOperation = "source-over";
+      dctx.strokeStyle = dColor;
+    }
+
+    let lastX = dLastX;
+    let lastY = dLastY;
+
+    pendingPoints.forEach(p => {
+      dctx.moveTo(lastX, lastY);
+      dctx.lineTo(p.x, p.y);
+      lastX = p.x;
+      lastY = p.y;
+    });
+
+    dctx.stroke();
+    
+    dLastX = lastX;
+    dLastY = lastY;
+    pendingPoints = [];
+    
+    rafPending = requestAnimationFrame(renderQueue);
   }
 
   function startDraw(e) {
@@ -194,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dDrawing = true;
     const { x, y } = getDPos(e);
     dLastX = x; dLastY = y;
+    
     dctx.beginPath();
     dctx.arc(x, y, dStroke / 2, 0, Math.PI * 2);
     if (dTool === "eraser") {
@@ -204,39 +245,47 @@ document.addEventListener("DOMContentLoaded", () => {
       dctx.fillStyle = dColor;
     }
     dctx.fill();
+    
+    if (!rafPending) {
+      rafPending = requestAnimationFrame(renderQueue);
+    }
   }
 
   function doDraw(e) {
     if (!dDrawing || dTool === "text") return;
     if (e.cancelable) e.preventDefault();
-    const { x, y } = getDPos(e);
-    dctx.beginPath();
-    dctx.lineCap = "round"; dctx.lineJoin = "round";
-    dctx.lineWidth = dTool === "eraser" ? dStroke * 4 : dStroke;
-    if (dTool === "eraser") {
-      dctx.globalCompositeOperation = "destination-out";
-      dctx.strokeStyle = "rgba(0,0,0,1)";
+
+    // Use coalesced events for higher precision if available
+    let points = [];
+    if (e.getCoalescedEvents) {
+      points = e.getCoalescedEvents().map(ce => getDPos(ce));
     } else {
-      dctx.globalCompositeOperation = "source-over";
-      dctx.strokeStyle = dColor;
+      points = [getDPos(e)];
     }
-    dctx.moveTo(dLastX, dLastY);
-    dctx.lineTo(x, y);
-    dctx.stroke();
-    dLastX = x; dLastY = y;
+
+    pendingPoints.push(...points);
+
+    if (!rafPending) {
+      rafPending = requestAnimationFrame(renderQueue);
+    }
   }
 
-  function stopDraw() { dDrawing = false; dctx.globalCompositeOperation = "source-over"; }
+  function stopDraw() { 
+    dDrawing = false; 
+    if (rafPending) {
+      cancelAnimationFrame(rafPending);
+      rafPending = false;
+    }
+    // Final flush
+    renderQueue();
+    dctx.globalCompositeOperation = "source-over"; 
+  }
 
   drawCanvas.addEventListener("pointerdown", startDraw);
   drawCanvas.addEventListener("pointermove", doDraw, { passive: false });
   drawCanvas.addEventListener("pointerup", stopDraw);
   drawCanvas.addEventListener("pointerout", stopDraw);
-
-  // Touch support
-  drawCanvas.addEventListener("touchstart", startDraw, { passive: true });
-  drawCanvas.addEventListener("touchmove", doDraw, { passive: false });
-  drawCanvas.addEventListener("touchend", stopDraw);
+  drawCanvas.addEventListener("pointercancel", stopDraw);
 
   // Text tool on drawing overlay
   drawCanvas.addEventListener("click", e => {
