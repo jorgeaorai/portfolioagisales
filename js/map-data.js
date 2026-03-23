@@ -33,6 +33,21 @@ const BRAZIL_OFFICES = {
     name: "Goiás",
     photo: "images/agigo.jpg",
     description: "Ponto focal na região Centro-Oeste, o escritório de Goiás é peça chave na nossa logística nacional e atendimento regional.\n\nEndereço: AV DEP JAMEL CECILIO, QD. B26, L. 16/17, N° 2690, SALA 1910, JARDIM GOIÁS, CEP: 74810-100"
+  },
+  "MA": {
+    name: "Maranhão",
+    photo: "images/agima.png",
+    description: "Nossa unidade no Maranhão traz soluções inovadoras em gestão de benefícios e consultoria corporativa, impulsionando o ecossistema empresarial da região com tecnologia e proximidade."
+  },
+  "SE": {
+    name: "Sergipe",
+    photo: "images/agise.png",
+    description: "Sergipe conta agora com o atendimento especializado da Agisales, oferecendo as melhores soluções em saúde e benefícios para empresas que buscam eficiência e cuidado com seus colaboradores."
+  },
+  "BA": {
+    name: "Bahia",
+    photo: "images/agiba.png",
+    description: "Nossa forte presença na Bahia consolida nosso compromisso com o Nordeste, entregando gestão de vidas e benefícios com a excelência que o mercado baiano exige."
   }
 };
 
@@ -41,12 +56,12 @@ const BRAZIL_STATES = [
   { id: "AL", x: 439, y: 186, office: true },
   { id: "AM", x: 95, y: 112 },
   { id: "AP", x: 249, y: 45 },
-  { id: "BA", x: 365, y: 216 },
+  { id: "BA", x: 365, y: 216, office: true },
   { id: "CE", x: 395, y: 126, office: true },
   { id: "DF", x: 294, y: 255 },
   { id: "ES", x: 384, y: 308 },
   { id: "GO", x: 267, y: 268, office: true },
-  { id: "MA", x: 325, y: 122 },
+  { id: "MA", x: 325, y: 122, office: true },
   { id: "MG", x: 331, y: 288 },
   { id: "MS", x: 218, y: 305 },
   { id: "MT", x: 207, y: 216 },
@@ -61,7 +76,7 @@ const BRAZIL_STATES = [
   { id: "RR", x: 137, y: 41 },
   { id: "RS", x: 233, y: 419 },
   { id: "SC", x: 267, y: 392 },
-  { id: "SE", x: 418, y: 205 },
+  { id: "SE", x: 418, y: 205, office: true },
   { id: "SP", x: 285, y: 332 },
   { id: "TO", x: 289, y: 190 }
 ];
