@@ -71,7 +71,7 @@ html{
 }
 
 body{
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 0.025em;
@@ -1248,13 +1248,15 @@ a.brand:focus{
 }
 
 
-.popup-youtube{
+.popup-youtube,
+.popup-video{
   display:inline-block;
   color:#fff;
   font-size: 1.26rem;
 }
 
-.popup-youtube:hover{
+.popup-youtube:hover,
+.popup-video:hover{
   text-decoration: none;
 }
 

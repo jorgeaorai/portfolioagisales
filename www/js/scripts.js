@@ -1,4 +1,4 @@
-﻿( function($) {
+( function($) {
   'use strict';
 
 
@@ -63,6 +63,23 @@
 		preloader: false,
 
 		fixedContentPos: false
+	});
+
+	$(document).on('click', '.popup-video', function(e) {
+		e.preventDefault();
+		$('#video-popup, #video-popup-overlay').addClass('show');
+		var video = $('#main-video')[0];
+		if (video) {
+			video.play();
+		}
+	});
+
+	$(document).on('click', '.video-popup-close, #video-popup-overlay', function() {
+		$('#video-popup, #video-popup-overlay').removeClass('show');
+		var video = $('#main-video')[0];
+		if (video) {
+			video.pause();
+		}
 	});
 
 
@@ -160,10 +177,12 @@
     navbar();
 
     if ($('.pagepiling').length > 0){
-      	$('.pagepiling').pagepiling({
+      $('.pagepiling').pagepiling({
     		scrollingSpeed: 280,
-		    loopBottom:true,
-		    anchors: ['page1', 'page2', 'page3', 'page4', 'page5', 'page6', 'page7', 'page8'],
+		    sectionSelector: '.section',
+		    loopBottom: false,
+		    loopTop: false,
+		    anchors: ['page1', 'page1-2', 'page3', 'page4-2', 'page4', 'page6', 'page7'],
 		    afterLoad: function(anchorLink, index){
 	           navbarFullpage();
 	            

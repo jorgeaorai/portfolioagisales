@@ -1,10 +1,219 @@
-/* 
-  Estilos para a funcionalidade de Anotações 
-*/
+/* ============================================================
+   FLOATING PENCIL BUTTON (FAB)
+   ============================================================ */
 
-/* O grande botão de anotações */
+#fab-pencil {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #11afdc, #0d8aaf);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9990;
+  box-shadow: 0 4px 20px rgba(17, 175, 220, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #fff;
+}
+
+#fab-pencil:hover {
+  transform: scale(1.1) rotate(-10deg);
+  box-shadow: 0 8px 28px rgba(17, 175, 220, 0.6);
+}
+
+#fab-pencil svg {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+#fab-pencil.active {
+  background: linear-gradient(135deg, #ff3b30, #c0392b);
+  transform: rotate(45deg);
+  box-shadow: 0 8px 28px rgba(255, 59, 48, 0.5);
+}
+
+/* ============================================================
+   DRAWING OVERLAY
+   ============================================================ */
+
+#drawing-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 9995;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+#drawing-overlay.active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}
+
+.drawing-toolbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: rgba(20, 20, 30, 0.92);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  z-index: 9998;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+.dtb-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+  padding-right: 12px;
+  margin-right: 4px;
+}
+
+.dtb-group:last-child {
+  border-right: none;
+}
+
+.dtb-tool {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255,255,255,0.75);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.dtb-tool:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.dtb-tool.active {
+  background: rgba(17, 175, 220, 0.3);
+  border-color: #11afdc;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Colors */
+.dtb-colors {
+  gap: 8px;
+}
+
+.dtb-color {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.dtb-color:hover {
+  transform: scale(1.15);
+}
+
+.dtb-color.active {
+  border-color: #fff;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+}
+
+/* Stroke select */
+.dtb-group label {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#dtb-stroke {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 12px;
+  outline: none;
+}
+
+/* Action buttons */
+.dtb-action {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.dtb-action:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.dtb-close-btn {
+  background: rgba(255, 59, 48, 0.3);
+  border-color: rgba(255,59,48,0.5);
+}
+
+.dtb-close-btn:hover {
+  background: rgba(255,59,48,0.5);
+}
+
+/* Canvas */
+#drawing-canvas {
+  position: fixed;
+  top: 56px; left: 0;
+  width: 100vw;
+  height: calc(100vh - 56px);
+  cursor: crosshair;
+  display: block;
+}
+
+/* Text input overlay */
+#dtb-text-input {
+  position: fixed;
+  display: none;
+  background: transparent;
+  border: 1px dashed rgba(255,255,255,0.6);
+  color: #fff;
+  outline: none;
+  font-size: 16px;
+  padding: 4px;
+  min-width: 60px;
+  z-index: 9999;
+  resize: none;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* ============================================================
+   OLD NOTES MODAL (kept for backward compat, hidden)
+   ============================================================ */
+
 .btn-notes-trigger {
-  width: 1120px;
+  width: 100%;
   max-width: 100%;
   height: 80px;
   display: flex;
@@ -26,16 +235,12 @@
 .btn-notes-trigger:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.2);
 }
 
-/* Modal de Anotações Tela Cheia */
 #notes-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background-color: #ffffff;
   z-index: 99999;
   display: flex;
@@ -50,7 +255,6 @@
   pointer-events: all;
 }
 
-/* Header / Toolbar estilo Mac */
 .notes-toolbar {
   height: 60px;
   background-color: #f6f6f6;
@@ -61,168 +265,266 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.mac-controls {
-  display: flex;
-  gap: 8px;
-  margin-right: 30px;
+.mac-controls { display: flex; gap: 8px; margin-right: 30px; }
+.mac-btn { width: 14px; height: 14px; border-radius: 50%; border: none; cursor: pointer; padding: 0; }
+.mac-close { background-color: #ff5f56; }
+.mac-close:hover::after { content: "×"; font-size: 14px; }
+.mac-minimize { background-color: #ffbd2e; }
+.mac-maximize { background-color: #27c93f; }
+
+.toolbar-tools { display: flex; align-items: center; gap: 15px; margin-right: auto; }
+.tool-btn { background: none; border: 1px solid transparent; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; color: #333; transition: all 0.2s; }
+.tool-btn:hover { background-color: #e5e5e5; }
+.tool-btn.active { background-color: #e0e0e0; border-color: #ccc; font-weight: 600; }
+
+.color-picker { display: flex; gap: 8px; margin: 0 20px; border-left: 1px solid #ddd; padding-left: 20px; }
+.color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.active { border-color: #333; transform: scale(1.1); box-shadow: 0 0 0 2px white inset; }
+
+.stroke-picker select { padding: 6px; border-radius: 6px; border: 1px solid #ccc; outline: none; }
+
+.toolbar-actions { display: flex; gap: 10px; margin-left: 20px; border-left: 1px solid #ddd; padding-left: 20px; }
+.action-btn { background-color: white; border: 1px solid #ccc; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: #333; transition: background 0.2s; }
+.action-btn:hover { background-color: #f0f0f0; }
+
+.canvas-container { flex: 1; position: relative; overflow: hidden; background-color: #ffffff; cursor: crosshair; }
+#notes-canvas { display: block; }
+
+#text-input-overlay {
+  position: absolute; display: none; background: transparent;
+  border: 1px dashed #999; outline: none; font-family: inherit;
+  padding: 2px; min-width: 50px; z-index: 10; resize: none; overflow: hidden;
 }
 
-.mac-btn {
-  width: 14px;
-  height: 14px;
+/* ============================================================
+   TIMELINE HORIZONTAL CAROUSEL
+   ============================================================ */
+
+.timeline-carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 44px 0 44px;
+  cursor: grab;
+  user-select: none;
+}
+
+.timeline-carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.timeline-track {
+  display: flex;
+  gap: 0;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.timeline-item {
+  flex: 0 0 25%; /* 4 visible items */
+  min-width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+  position: relative;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.timeline-item:not(.active) {
+  opacity: 0.55;
+}
+
+.timeline-item.active {
+  opacity: 1;
+}
+
+/* Circle on top */
+.timeline-circle {
+  width: 125px;
+  height: 125px;
   border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.3);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-item.active .timeline-circle {
+  border-color: #11afdc;
+  transform: scale(1.1);
+  box-shadow: 0 0 24px rgba(17,175,220,0.6);
+}
+
+.timeline-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Horizontal line connector - purely decorative, must NOT block clicks */
+.timeline-connector {
+  width: 100%;
+  height: 2px;
+  background: rgba(255,255,255,0.25);
+  position: absolute;
+  top: calc(62.5px + 1.5px);
+  left: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline-item:last-child .timeline-connector {
+  display: none;
+}
+
+/* Dot on the line - decorative only */
+.timeline-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  border: 2px solid rgba(255,255,255,0.6);
+  margin-top: 8px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.timeline-item.active .timeline-dot {
+  background: #11afdc;
+  border-color: #fff;
+}
+
+/* Year */
+.timeline-year {
+  color: #11afdc;
+  font-size: 1.06rem;
+  font-weight: 700;
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
+/* Title + description below */
+.timeline-content {
+  text-align: center;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.timeline-title {
+  color: #fff;
+  font-size: 1.19rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  margin-top: 0;
+}
+
+.timeline-text {
+  color: rgba(255,255,255,0.7);
+  font-size: 1.0rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive: on small screens show 2 items */
+@media (max-width: 768px) {
+  .timeline-item {
+    flex: 0 0 50%;
+    min-width: 50%;
+  }
+  .timeline-circle {
+    width: 90px;
+    height: 90px;
+  }
+  .timeline-connector {
+    top: calc(45px + 1.5px);
+  }
+}
+/* ============================================================
+   CUSTOM VIDEO POPUP (Office Style)
+   ============================================================ */
+
+#video-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#video-popup-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+#video-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 90%;
+  max-width: 900px;
+  background: rgba(28, 28, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 0;
+  display: none;
+  z-index: 10001;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#video-popup.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.video-popup-body {
+  padding: 0;
+  background: #000;
+}
+
+.video-popup-body video {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+}
+
+.video-popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
+  color: #fff;
+  font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-}
-
-.mac-close {
-  background-color: #ff5f56;
-  color: #ff5f56;
-}
-
-.mac-close:hover {
-  color: #4c0000;
-}
-
-.mac-close::after {
-  content: "×";
-  font-size: 14px;
-  line-height: 1;
-  font-weight: bold;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.mac-close:hover::after {
-  opacity: 1;
-}
-
-.mac-minimize {
-  background-color: #ffbd2e;
-}
-.mac-maximize {
-  background-color: #27c93f;
-}
-
-/* Ferramentas de desenho */
-.toolbar-tools {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-right: auto;
-}
-
-.tool-btn {
-  background: none;
-  border: 1px solid transparent;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.tool-btn:hover {
-  background-color: #e5e5e5;
-}
-
-.tool-btn.active {
-  background-color: #e0e0e0;
-  border-color: #ccc;
-  font-weight: 600;
-}
-
-/* Seleção de cores */
-.color-picker {
-  display: flex;
-  gap: 8px;
-  margin: 0 20px;
-  border-left: 1px solid #ddd;
-  padding-left: 20px;
-}
-
-.color-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.2s;
-}
-
-.color-swatch:hover {
-  transform: scale(1.1);
-}
-
-.color-swatch.active {
-  border-color: #333;
-  transform: scale(1.1);
-  box-shadow: 0 0 0 2px white inset;
-}
-
-/* Espessura */
-.stroke-picker select {
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-}
-
-/* Ações extras */
-.toolbar-actions {
-  display: flex;
-  gap: 10px;
-  margin-left: 20px;
-  border-left: 1px solid #ddd;
-  padding-left: 20px;
-}
-
-.action-btn {
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #333;
+  z-index: 10002;
   transition: background 0.2s;
 }
 
-.action-btn:hover {
-  background-color: #f0f0f0;
-}
-
-/* Área do Canvas */
-.canvas-container {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  background-color: #ffffff;
-  cursor: crosshair;
-}
-
-#notes-canvas {
-  display: block;
-}
-
-/* Ferramenta de Texto Input Overlay */
-#text-input-overlay {
-  position: absolute;
-  display: none;
-  background: transparent;
-  border: 1px dashed #999;
-  outline: none;
-  font-family: inherit;
-  padding: 2px;
-  min-width: 50px;
-  z-index: 10;
-  resize: none;
-  overflow: hidden;
+.video-popup-close:hover {
+  background: rgba(255, 255, 255, 0.4);
 }

@@ -8,7 +8,7 @@
   <meta name="author" content="">
 
   <!-- Favicons -->
-
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png">
@@ -19,17 +19,17 @@
 
   <!-- Styles -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,400i,500,600,700&display=swap" rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap"
-    rel="stylesheet">
+  <link href="css/owl.carousel.min.css" rel="stylesheet">
   <link href="css/notes.css" rel="stylesheet" media="screen">
+  <link href="css/map.css" rel="stylesheet">
+  <link href="css/solutions.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet" media="screen">
   <style>
     body {
-      font-family: 'Lato', sans-serif !important;
+      font-family: 'Montserrat', sans-serif !important;
       font-size: 16px !important;
       font-weight: 400 !important;
+      background-color: #050a12 !important;
     }
 
     h1,
@@ -41,17 +41,170 @@
     .title,
     .display-1,
     .display-2 {
-      font-family: 'Lato', sans-serif !important;
+      font-family: 'Montserrat', sans-serif !important;
       font-weight: 600 !important;
     }
 
     .display-2 {
       font-size: 4.54rem !important;
     }
+
+    /* Hide logo on first page */
+    body.pp-viewing-page1 .brand {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .brand {
+      transition: all 0.5s ease;
+    }
+
+    #bgvid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -100;
+      object-fit: cover;
+      transition: 1s opacity;
+    }
+
+    /* Big Numbers Section */
+    .big-numbers-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 15px;
+      margin-bottom: 30px;
+      width: 100%;
+      padding-top: 10px; /* Space for hover transform */
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE and Edge */
+    }
+
+    .big-numbers-row::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+    .big-number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      text-align: center;
+      min-width: 180px;
+      flex: 1;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .big-number-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #11afdc;
+      transform: translateY(-5px);
+    }
+
+    .big-number-value {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #11afdc;
+      margin-bottom: 5px;
+    }
+
+    .big-number-label {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.2;
+    }
+
+    /* Map Legend */
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .legend-box.office {
+      border: 1px solid #fff;
+      background: transparent;
+    }
+
+    .legend-box.coverage {
+      background: rgba(17, 175, 220, 0.4);
+      border: 1px solid #11afdc;
+    }
+
+    /* Map Interaction Styles */
+    #map-3d-container svg .state {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state .shape {
+      fill: rgba(17, 175, 220, 0.15);
+      stroke: transparent;
+      stroke-width: 0;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state.active-office .shape {
+      fill: transparent;
+      stroke: transparent;
+      stroke-width: 0;
+    }
+
+    #map-3d-container svg .state:hover .shape {
+      fill: rgba(255, 255, 255, 0.1);
+      stroke: #11afdc;
+      stroke-width: 2px;
+    }
+
+    #map-3d-container svg .label_icon_state {
+      fill: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .big-number-card {
+        min-width: 140px;
+        padding: 10px;
+      }
+
+      .big-number-value {
+        font-size: 1.4rem;
+      }
+    }
   </style>
 </head>
 
-<body>
+<body class="pp-viewing-page1">
   <div class="animsition">
     <div class="loader">
       <div class="spinner">
@@ -81,17 +234,17 @@
         <li data-menuanchor="page3">
           <a href="#page3">Timeline</a>
         </li>
+        <li data-menuanchor="page6">
+          <a href="#page6">Soluções</a>
+        </li>
         <li data-menuanchor="page4-2">
           <a href="#page4-2">Presença</a>
         </li>
         <li data-menuanchor="page4">
           <a href="#page4">About</a>
         </li>
-        <li data-menuanchor="page5">
-          <a href="#page5">Projects</a>
-        </li>
         <li data-menuanchor="page7">
-          <a href="#page7">Testimonials</a>
+          <a href="#page7">Informações</a>
         </li>
       </ul>
       <div class="menu-footer right-boxed">
@@ -106,12 +259,7 @@
         <img alt="" src="images/uploads/1773853030295.png">
       </a>
 
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse"
-        aria-expanded="false">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+
 
 
     </header>
@@ -119,7 +267,9 @@
     <div class="pagepiling">
       <div data-anchor="page1" class="pp-scrollable text-white section section-1">
         <div class="scroll-wrap">
-          <div class="section-bg" style="background-image:url(images/uploads/1773853736279.jpg);"></div>
+          <video autoplay muted loop playsinline id="bgvid">
+            <source src="images/videobg.mp4" type="video/mp4">
+          </video>
           <div class="scrollable-content">
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
@@ -128,13 +278,7 @@
                     <div class="intro">
                       <div class="row">
                         <div class="col-md-8 col-lg-6">
-                          <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
-                              A decisão certa
-                            </span> <span style="font-weight: 300;">
-                              muda tudo.
-                            </span></h1>
-                          <a class="popup-youtube" href="http://www.youtube.com/watch?v=0O2aH4XLbto"><span
-                              class="icon ion-ios-play"></span>Assista o vídeo </a>
+
                         </div>
                       </div>
                     </div>
@@ -147,7 +291,7 @@
       </div>
       <div data-anchor="page1-2" class="pp-scrollable text-white section section-1-2">
         <div class="scroll-wrap">
-          <div class="section-bg" style="background-image:url(images/uploads/1773854814257.png);"></div>
+          <div class="section-bg" style="background-image:url(images/uploads/bgsec2.jpg);"></div>
           <div class="scrollable-content">
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
@@ -157,10 +301,12 @@
                       <div class="row">
                         <div class="col-md-8 col-lg-6">
                           <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
-                              E você
+                              Estratégia
                             </span> <span style="font-weight: 300;">
-                              não precisa fazer isso sozinho.
+                              não se explica. Se constrói.
                             </span></h1>
+                          - <a class="popup-video" href="images/agivideo1.mp4"><span <a class="popup-video"
+                              href="#video-popup"><span class="icon ion-ios-play"></span>Assista o vídeo </a>
                         </div>
                       </div>
                     </div>
@@ -183,90 +329,109 @@
                   <div class="container">
                     <div class="intro">
                       <div class="row justify-content-center">
-                        <div class="col-md-10 fadeY fadeY-1">
-                          <h2 class="resume-header title text-center mb-5 pb-4">Uma trajetória marcada por evolução e
-                            resultados.</h2>
-                          <div class="col-resume p-4 p-md-5 rounded">
-                            <div class="resume-content">
-                              <div class="resume-inner">
-                                <!-- Item 1 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 1"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 1</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">January 2020</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                        <div class="col-12 fadeY fadeY-1">
+                          <!-- Timeline Horizontal Carrossel -->
+                          <div class="timeline-carousel-wrapper">
+                            <div class="timeline-track" id="timeline-track">
+                              <!-- Item 1 -->
+                              <div class="timeline-item" data-index="0" data-bg="images/ortoclin.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/joaquim.jpg" alt="Placeholder 1">
                                 </div>
-                                <!-- Item 2 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 2"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 2</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">December 2020</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">1997</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Nasce um sonho</h6>
+                                  <p class="timeline-text">Norteado pelo propósito de Dr. Jurandir Neves, seu pai, Dr.
+                                    Jurandir
+                                    Neves funda em Recife/PE a Ortonclin, guiado pela visão de ampliar e
+                                    transformar vidas através do cuidado odontológico.</p>
                                 </div>
-                                <!-- Item 3 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 3"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 3</h6>
-                                    <i class="resume-study d-block mb-2" style="opacity: 0.8; font-size: 0.9rem;">July
-                                      2021</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                              </div>
+                              <!-- Item 2 -->
+                              <div class="timeline-item" data-index="1" data-bg="images/bgbreno.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/breno.jpg" alt="Placeholder 2">
                                 </div>
-                                <!-- Item 4 -->
-                                <div
-                                  class="resume-row d-flex flex-column flex-md-row align-items-md-start mb-4 pb-4 border-bottom">
-                                  <img src="images/bg/about.jpg" alt="Timeline 4"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 4</h6>
-                                    <i class="resume-study d-block mb-2" style="opacity: 0.8; font-size: 0.9rem;">March
-                                      2022</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2010</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Uma nova visão sobre o futuro</h6>
+                                  <p class="timeline-text">Breno Neves, segunda geração, assume a presidência, também
+                                    dentista e
+                                    empreendedor, a empresa passa por uma transformação cultural e inicia uma
+                                    transformação digital que iria disruptar o negócio como um todo.
+                                  </p>
                                 </div>
-                                <!-- Item 5 -->
-                                <div class="resume-row d-flex flex-column flex-md-row align-items-md-start">
-                                  <img src="images/bg/about.jpg" alt="Timeline 5"
-                                    class="rounded-circle mr-md-4 mb-3 mb-md-0"
-                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #11afdc;">
-                                  <div>
-                                    <h6 class="resume-type text-primary" style="font-size: 1.1rem; font-weight: 600;">
-                                      Event Title 5</h6>
-                                    <i class="resume-study d-block mb-2"
-                                      style="opacity: 0.8; font-size: 0.9rem;">Present</i>
-                                    <p class="resume-text mb-0" style="font-size: 0.95rem;">Lorem ipsum dolor sit amet,
-                                      consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-                                      magna aliqua.</p>
-                                  </div>
+                              </div>
+                              <!-- Item 3 -->
+                              <div class="timeline-item" data-index="2" data-bg="images/bgexpansao.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/expansao.jpg" alt="Placeholder 3">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2014</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Expandindo Fronteiras</h6>
+                                  <p class="timeline-text">Expandimos nossa operação, começando pelo Agreste/PE e depois
+                                    para o
+                                    Sertão/PE e alcançando todos os estados o Nordeste do Brasil e Goiás. Criando uma
+                                    operação com logística local, mas com abrangência Nacional.
+                                  </p>
+                                </div>
+                              </div>
+                              <!-- Item 4 -->
+                              <div class="timeline-item" data-index="3" data-bg="images/bgpandemia.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/pandemia.jpg" alt="Placeholder 4">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2020</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Contra as Estatísticas </h6>
+                                  <p class="timeline-text">Durante a crise global da COVID-19, enquanto muitos negócios
+                                    retraíram, alcançamos
+                                    um crescimento superior a 30% no ano, consolidando a nossa resiliência e capacidade
+                                    de adaptação ao inovarmos e criarmos soluções para os nossos clientes.</p>
+                                </div>
+                              </div>
+                              <!-- Item 5 -->
+                              <div class="timeline-item" data-index="4" data-bg="images/bggptw.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/gptw.jpg" alt="Placeholder 5">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2024</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">A Fantástica Fábrica de Esticar Gente.</h6>
+                                  <p class="timeline-text">Após recebermos o prêmio GPTW (Great Place to Work) em 2019,
+                                    em
+                                    2024 através de consultoria promovida pela FIA, fomos reconhecidos como um
+                                    dos "Lugares Incríveis para Trabalhar". Reafirmando o nosso posicionamento como
+                                    uma empresa de cultura forte e acolhedora, transformando potencial em potência.</p>
+                                </div>
+                              </div>
+                              <!-- Item 6 -->
+                              <div class="timeline-item" data-index="5" data-bg="images/bgagi.jpg">
+                                <div class="timeline-circle">
+                                  <img src="images/agi.jpg" alt="Placeholder 6">
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2025</div>
+                                <div class="timeline-content">
+                                  <h6 class="timeline-title">Nasce a Agisales. Soluções Sob Medidas.</h6>
+                                  <p class="timeline-text">Inconformado com o modelo retrógrado e pouco personalizável
+                                    que
+                                    o mercado ofertava benefícios para empresa. Breno Neves convida João Paulo Leite
+                                    para repensar o modelo de oferta de benefícios corporativos. Um ecossistema de
+                                    soluções
+                                    pensado para trazer algo sob medida para necessidade do cliente.</p>
                                 </div>
                               </div>
                             </div>
@@ -281,7 +446,7 @@
           </div>
         </div>
       </div>
-      <div data-anchor="page4-2" class="pp-scrollable section section-4">
+      <div data-anchor="page4-2" class="pp-scrollable section section-4-2">
         <div class="scroll-wrap">
           <div class="section-bg bg-about" style="background-image:url(images/uploads/1773859257859.jpg);"></div>
           <div class="scrollable-content">
@@ -291,12 +456,51 @@
                 <div class="boxed">
                   <div class="container">
                     <div class="intro">
+                      <!-- Big Numbers Top (Full Width) -->
+                      <div class="big-numbers-row">
+                        <div class="big-number-card">
+                          <span class="big-number-value">26</span>
+                          <span class="big-number-label">estados abrangidos</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">10</span>
+                          <span class="big-number-label">unidades de negócios</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">6k+</span>
+                          <span class="big-number-label">empresas em nosso ecossistema</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">1.4M+</span>
+                          <span class="big-number-label">vidas sob gestão</span>
+                        </div>
+                        <div class="big-number-card">
+                          <span class="big-number-value">R$ 100M+</span>
+                          <span class="big-number-label">em faturamento</span>
+                        </div>
+                      </div>
+
                       <div class="row align-items-center">
                         <div class="col-lg-6 offset-xl-1">
                           <div class="map-container"
                             style="position: relative; width: 100%; max-width: 800px; aspect-ratio: 1/1; margin: 0 auto;">
-                            <img src="images/Brazil_Blank_Map.svg" alt="Brazil Map"
-                              style="width: 100%; height: 100%; object-fit: contain;">
+                            <div class="map-3d-wrapper">
+                              <div id="map-3d-container" class="map-3d-container">
+                                <!-- Map is dynamically loaded by map.js -->
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Map Legend Bottom -->
+                          <div class="map-legend">
+                            <div class="legend-item">
+                              <div class="legend-box office"></div>
+                              <span>Cobertura</span>
+                            </div>
+                            <div class="legend-item">
+                              <div class="legend-box coverage"></div>
+                              <span>Escritórios</span>
+                            </div>
                           </div>
                         </div>
                         <div class="col-lg-5 mt-5 mt-xl-0">
@@ -308,13 +512,11 @@
                           <div class="mt-4 text-light">
                             <p>Estamos presentes em diferentes regiões do país, conectando
                               empresas a soluções que fazem sentido para seus negócios.</p>
-                            <p>
-                              &bull; Mais de 6 mil empresas em nosso ecossistema<br>
-                              &bull; Mais de 1,4 milhão de vidas sob gestão<br>
-                              &bull; Atuação em todo o território nacional
                             </p>
                             <p>Nossa capilaridade nos permite estar próximos, entendendo contextos e oferecendo
                               respostas mais assertivas.</p>
+
+
                           </div>
                         </div>
                       </div>
@@ -328,7 +530,7 @@
       </div>
       <div data-anchor="page4" class="pp-scrollable section section-4">
         <div class="scroll-wrap">
-          <div class="section-bg bg-about" style="background-image:url(images/uploads/1773859346187.jpg);"></div>
+          <div class="section-bg bg-about" style="background-image:url(images/advisor1.jpg);"></div>
           <div class="scrollable-content">
             <div class="vertical-title text-white  d-none d-lg-block"><span>advisor</span></div>
             <div class="vertical-centred">
@@ -338,25 +540,13 @@
                     <div class="intro">
                       <div class="row align-items-center">
                         <div class="col-lg-6 offset-xl-1">
-                          <div class="experience-box" style="padding: 15px;">
-                            <div class="experience-content d-flex flex-column flex-sm-row align-items-center">
-                              <div class="experience-image">
-                                <img src="images/joao.jpg" alt="Sales Advisor placeholder"
-                                  style="width: 310px; height: 470px; border-radius: 0; object-fit: cover; border: none; display: block; max-width: 100%;">
-                              </div>
-                              <div class="experience-info mt-4 mt-sm-0 ml-sm-4 text-center text-sm-left"
-                                style="min-width: 120px;">
-                                <div style="font-size: 1.5rem; line-height: 1.2; text-transform: uppercase;">
-                                  Sales<br>advisor</div>
-                              </div>
-                            </div>
-                          </div>
+
                         </div>
                         <div class="col-lg-5 mt-5 mt-xl-0">
                           <h2 class="title"> <span class="text-primary">
-                              Proximidade
+                              Ao seu
                             </span> <span style="font-weight: 300;">
-                              que gera confiança
+                              lado, sempre.
                             </span></h2>
                           <div class="mt-4 text-light" style="font-size: 1.1rem; line-height: 1.8;">
                             <p>Valorizamos relações próximas e duradouras.</p>
@@ -384,66 +574,59 @@
           </div>
         </div>
       </div>
-      <div data-anchor="page5" class="pp-scrollable text-white section section-5">
-        <div class="scroll-wrap">
-          <div class="bg-changer">
-            <div class="section-bg" style="background-image:url(images/uploads/1773860007268.jpg);"></div>
-            <div class="section-bg" style="background-image:url(images/uploads/1773860024516.jpg);"></div>
-            <div class="section-bg" style="background-image:url(images/uploads/1773860029498.jpg);"></div>
-            <div class="section-bg" style="background-image:url(images/uploads/1773860034857.jpg);"></div>
+      <div data-anchor="page6" class="pp-scrollable section section-6 section-solutions text-white">
+        <div class="solutions-bg-container">
+          <div class="section-bg solutions-bg-overlay active" style="background-image: url('images/odontologia.jpg');"
+            data-index="0"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/telemedicina.jpg');"
+            data-index="1"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/seguro.jpg');"
+            data-index="2"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/cartao.jpg');"
+            data-index="3"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/nr1.jpg');" data-index="4">
           </div>
-          <div class="scrollable-content">
-            <div class="vertical-title  d-none d-lg-block"><span>produtos</span></div>
-            <div class="vertical-centred">
-              <div class="boxed boxed-inner">
-                <div class="boxed">
-                  <div class="container">
-                    <div class="intro">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="project-row">
-                            <a class="active" href="project-detail.html">
-                              <span class="project-number">01</span>
-                              <h2 class="project-title">
-                                Plano odonto digital
-                              </h2>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/bemestar.jpg');"
+            data-index="5"></div>
+        </div>
+        <div class="scroll-wrap">
+          <div class="vertical-title text-white d-none d-lg-block"><span>soluções</span></div>
 
-                            </a>
-                          </div>
-                          <div class="project-row">
-                            <a href="project-detail.html">
-                              <span class="project-number">02</span>
-                              <h2 class="project-title">
-                                Telemedicina
-                              </h2>
+          <div class="vertical-centred">
+            <div class="boxed boxed-inner">
+              <div class="container">
+                <div class="solutions-container">
+                  <canvas id="ai-visualizer" width="500" height="500"></canvas>
+                  <div class="solution-central-text">Odontologia</div>
 
-                            </a>
-                          </div>
-                          <div class="project-row">
-                            <a href="project-detail.html">
-                              <span class="project-number">03</span>
-                              <h2 class="project-title">
-                                Seguro de vida
-                              </h2>
-
-                            </a>
-                          </div>
-                          <div class="project-row">
-                            <a href="project-detail.html">
-                              <span class="project-number">04</span>
-                              <h2 class="project-title">
-                                Cartão de descontos
-                              </h2>
-
-                            </a>
-                          </div>
-                          <div class="view-all view-all-projects">
-                            <a href="projects.html">
-                              Ver todos os produtos
-                            </a>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="solutions-circle-nav">
+                    <!-- Odonto -->
+                    <div class="solution-item active" data-index="0" data-name="Odontologia">
+                      <img src="images/iconodontologia.png" alt="Odontologia">
+                    </div>
+                    <!-- Telemedicina -->
+                    <div class="solution-item" data-index="1" data-name="Telemedicina">
+                      <img src="images/icontelemedicina.png" alt="Telemedicina">
+                    </div>
+                    <!-- Seguro de vida -->
+                    <div class="solution-item" data-index="2" data-name="Seguro de Vida">
+                      <img src="images/iconseguro.png" alt="Seguro de Vida">
+                    </div>
+                    <!-- Cartão de descontos -->
+                    <div class="solution-item" data-index="3" data-name="Cartão de Descontos">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                      </svg>
+                    </div>
+                    <!-- NR1 -->
+                    <div class="solution-item" data-index="4" data-name="NR1">
+                      <img src="images/iconnr1.png" alt="NR1">
+                    </div>
+                    <!-- Bem estar -->
+                    <div class="solution-item" data-index="5" data-name="Bem Estar">
+                      <img src="images/iconbemestar.png" alt="Bem Estar">
                     </div>
                   </div>
                 </div>
@@ -452,106 +635,61 @@
           </div>
         </div>
       </div>
-      <div data-anchor="page6" class="pp-scrollable section section-6">
+      <div data-anchor="page7" class="pp-scrollable text-white section section-7">
         <div class="scroll-wrap">
+          <div class="section-bg" style="background-image:url(images/uploads/1773860338864.jpg);"></div>
+          <div class="bg-quote"></div>
           <div class="scrollable-content">
-            <div class="vertical-title text-white d-none d-lg-block"><span>parceiros</span></div>
+            <div class="vertical-title d-none d-lg-block"><span>informações</span></div>
             <div class="vertical-centred">
               <div class="boxed boxed-inner">
                 <div class="boxed">
                   <div class="container">
                     <div class="intro">
-                      <h2 class="title text-white"><span class="text-primary">Trabalhamos</span> com grandes marcas</h2>
-                      <div class="row row-partners justify-content-center">
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="api.saúde" src="images/api.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Ficabem" src="images/fica.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Predicta" src="images/predicta.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Clin" src="images/clin.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="star" src="images/star.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                        <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-partner">
-                          <div class="partner-inner"><img alt="Audicore" src="images/audi.png"
-                              style="border-radius: 8px; width: auto; max-height: 80px;"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div data-anchor="page7" class="pp-scrollable text-white section section-7">
-            <div class="scroll-wrap">
-              <div class="section-bg" style="background-image:url(images/uploads/1773860338864.jpg);">
-              </div>
-              <div class="bg-quote"></div>
-              <div class="scrollable-content">
-                <div class="vertical-title  d-none d-lg-block"><span>informações</span></div>
-                <div class="vertical-centred">
-                  <div class="boxed boxed-inner">
-                    <div class="boxed">
-                      <div class="container">
-                        <div class="intro">
-                          <div class="review-carousel owl-carousel">
-                            <div class="review-carousel-item">
-                              <!-- Botão Grande de Anotações -->
-                              <div class="review-row mb-5">
-                                <div class="row">
-                                  <div class="col-12">
-                                    <div class="btn-notes-trigger" style="margin: 0;">
-                                      Anotações
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="review-row">
-                                <div class="row">
-                                  <div class="col-md-5">
-                                    <div class="review-author">
-                                      <div class="author-name">Agilidade e inteligência</div>
-                                      <i>em soluções sob medida</i>
-                                    </div>
-                                  </div>
-                                  <div class="col-md-7 text">
-                                    <p>Sua empresa cresce quando as pessoas crescem.
-                                      Nossos benefícios fazem isso acontecer com zero burocracia e máxima eficiência.
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="review-row">
-                                <div class="row">
-                                  <div class="col-md-5">
-                                    <div class="review-author">
-                                      <div class="author-name">Contato</div>
-                                      <i>entre em contato conosco</i>
-                                    </div>
-                                  </div>
-                                  <div class="col-md-7 text">
-                                    <p>
-                                      <www class="agisales com br"></www>
-                                    </p>
-                                  </div>
+                      <div class="review-carousel owl-carousel">
+                        <div class="review-carousel-item">
+                          <!-- Botão Grande de Anotações -->
+                          <div class="review-row mb-5">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="btn-notes-trigger" style="margin: 0;">
+                                  Anotações
                                 </div>
                               </div>
                             </div>
-
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Agilidade e inteligência</div>
+                                  <i>em soluções sob medida</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>Sua empresa cresce quando as pessoas crescem.
+                                  Nossos benefícios fazem isso acontecer com zero burocracia e máxima eficiência.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Contato</div>
+                                  <i>entre em contato conosco</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>
+                                  <www class="agisales com br"></www>
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
@@ -561,68 +699,132 @@
           </div>
         </div>
       </div>
-      <!-- jQuery -->
+    </div><!-- end pagepiling -->
 
-      <script src="js/jquery.min.js"></script>
-      <script src="js/wow.min.js"></script>
-      <script src="js/smoothscroll.js"></script>
-      <script src="js/animsition.js"></script>
-      <script src="js/jquery.validate.min.js"></script>
-      <script src="js/jquery.magnific-popup.min.js"></script>
-      <script src="js/owl.carousel.min.js"></script>
-      <script src="js/jquery.pagepiling.min.js"></script>
+    <!-- Floating Pencil Button -->
+    <button id="fab-pencil" title="Ativar desenho">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+      </svg>
+    </button>
 
-      <!-- Modal Anotações Tela Cheia -->
-      <div id="notes-modal">
-        <div class="notes-toolbar">
-          <div class="mac-controls">
-            <button class="mac-btn mac-close" title="Fechar"></button>
-            <button class="mac-btn mac-minimize"></button>
-            <button class="mac-btn mac-maximize"></button>
-          </div>
-          <div class="toolbar-tools">
-            <button class="tool-btn active" data-tool="pen">✏️ Caneta</button>
-            <button class="tool-btn" data-tool="text">🔤 Texto</button>
-            <button class="tool-btn" data-tool="eraser">🧹 Borracha</button>
-          </div>
-          <div class="color-picker">
-            <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
-            <div class="color-swatch" data-color="#ff3b30" style="background-color: #ff3b30;"></div>
-            <div class="color-swatch" data-color="#007aff" style="background-color: #007aff;"></div>
-            <div class="color-swatch" data-color="#34c759" style="background-color: #34c759;"></div>
-            <div class="color-swatch" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
-          </div>
-          <div class="stroke-picker" style="margin-left: 15px;">
-            <select id="stroke-width">
-              <option value="2">Fino</option>
-              <option value="5" selected>Médio</option>
-              <option value="10">Grosso</option>
-              <option value="20">Extragrosso</option>
-            </select>
-          </div>
-          <div class="toolbar-actions">
-            <button class="action-btn" id="btn-clear">Limpar Tudo</button>
-          </div>
+    <!-- Drawing Overlay -->
+    <div id="drawing-overlay">
+      <div class="drawing-toolbar">
+        <div class="dtb-group">
+          <button class="dtb-tool active" data-tool="pen">&#9999;&#65039; Caneta</button>
+          <button class="dtb-tool" data-tool="eraser">&#129529; Borracha</button>
+          <button class="dtb-tool" data-tool="text">&#128288;&#65039; Texto</button>
         </div>
-        <div class="canvas-container">
-          <textarea id="text-input-overlay" placeholder="Digite e aperte Enter..."></textarea>
+        <div class="dtb-group dtb-colors">
+          <div class="dtb-color active" data-color="#ffffff" style="background:#ffffff;"></div>
+          <div class="dtb-color" data-color="#11afdc" style="background:#11afdc;"></div>
+          <div class="dtb-color" data-color="#ff3b30" style="background:#ff3b30;"></div>
+          <div class="dtb-color" data-color="#34c759" style="background:#34c759;"></div>
+          <div class="dtb-color" data-color="#ffcc00" style="background:#ffcc00;"></div>
+          <div class="dtb-color" data-color="#000000" style="background:#000000;"></div>
+        </div>
+        <div class="dtb-group">
+          <label style="color:#fff;font-size:12px;margin-right:4px;">Espessura</label>
+          <select id="dtb-stroke">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extra</option>
+          </select>
+        </div>
+        <div class="dtb-group">
+          <button id="dtb-clear" class="dtb-action">Limpar</button>
+          <button id="dtb-close" class="dtb-action dtb-close-btn">&#10005; Fechar</button>
         </div>
       </div>
+      <canvas id="drawing-canvas"></canvas>
+      <textarea id="dtb-text-input" placeholder="Digite aqui..."></textarea>
+    </div>
 
-      <!-- Scripts -->
-      <script src="js/scripts.js"></script>
-      <script src="js/notes.js"></script>
-      <script>
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').then((registration) => {
-              console.log('ServiceWorker registrado com sucesso com o scope: ', registration.scope);
-            }).catch((error) => {
-              console.log('Falha no registro do ServiceWorker: ', error);
-            });
-          });
-        }
-      </script>
+    <!-- jQuery -->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/smoothscroll.js"></script>
+    <script src="js/animsition.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.pagepiling.min.js"></script>
+
+    <!-- Modal Anotações Tela Cheia -->
+    <div id="notes-modal">
+      <div class="notes-toolbar">
+        <div class="mac-controls">
+          <button class="mac-btn mac-close" title="Fechar"></button>
+          <button class="mac-btn mac-minimize"></button>
+          <button class="mac-btn mac-maximize"></button>
+        </div>
+        <div class="toolbar-tools">
+          <button class="tool-btn active" data-tool="pen">✏️ Caneta</button>
+          <button class="tool-btn" data-tool="text">🔤 Texto</button>
+          <button class="tool-btn" data-tool="eraser">🧹 Borracha</button>
+        </div>
+        <div class="color-picker">
+          <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
+          <div class="color-swatch" data-color="#ff3b30" style="background-color: #ff3b30;"></div>
+          <div class="color-swatch" data-color="#007aff" style="background-color: #007aff;"></div>
+          <div class="color-swatch" data-color="#34c759" style="background-color: #34c759;"></div>
+          <div class="color-swatch" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
+        </div>
+        <div class="stroke-picker" style="margin-left: 15px;">
+          <select id="stroke-width">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extragrosso</option>
+          </select>
+        </div>
+        <div class="toolbar-actions">
+          <button class="action-btn" id="btn-clear">Limpar Tudo</button>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <textarea id="text-input-overlay" placeholder="Digite e aperte Enter..."></textarea>
+      </div>
+    </div>
+
+    <!-- Office Popup -->
+    <div id="popup-overlay"></div>
+    <div id="office-popup">
+      <button class="popup-close">&times;</button>
+      <div class="popup-header"></div>
+      <div class="popup-body">
+        <h3 class="popup-title"></h3>
+        <p class="popup-desc"></p>
+      </div>
+    </div>
+
+    <!-- Video Popup (Custom) -->
+    <div id="video-popup-overlay"></div>
+    <div id="video-popup">
+      <button class="video-popup-close">&times;</button>
+      <div class="video-popup-body">
+        <video id="main-video" controls width="100%">
+          <source src="images/agivideo1.mp4" type="video/mp4">
+          Seu navegador não suporta vídeos.
+        </video>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/scripts.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/map-data.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/solutions.js"></script>
+    <script>
+      if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+      }
+    </script>
 </body>
 
 </html>

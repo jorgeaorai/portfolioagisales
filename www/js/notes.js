@@ -1,194 +1,452 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  /* ============================================================
+     OLD NOTES MODAL (botão "Anotações" na page7)
+     ============================================================ */
   const modal = document.getElementById("notes-modal");
   const btnTrigger = document.querySelector(".btn-notes-trigger");
   const btnClose = document.querySelector(".mac-close");
   const canvasContainer = document.querySelector(".canvas-container");
   const textInputOverlay = document.getElementById("text-input-overlay");
-  
-  // Toolbar buttons
-  const tools = document.querySelectorAll(".tool-btn");
-  const colors = document.querySelectorAll(".color-swatch");
-  const selectStroke = document.getElementById("stroke-width");
-  const btnClear = document.getElementById("btn-clear");
 
-  // Create canvas
-  const canvas = document.createElement("canvas");
-  canvas.id = "notes-canvas";
-  canvasContainer.appendChild(canvas);
-  const ctx = canvas.getContext("2d");
+  if (modal && canvasContainer) {
+    const tools = document.querySelectorAll(".tool-btn");
+    const colors = document.querySelectorAll(".color-swatch");
+    const selectStroke = document.getElementById("stroke-width");
+    const btnClear = document.getElementById("btn-clear");
 
-  // State
-  let isDrawing = false;
-  let currentTool = "pen"; // "pen", "eraser", "text"
-  let strokeColor = "#000000";
-  let strokeWidth = 2;
-  
-  let lastX = 0;
-  let lastY = 0;
+    const canvas = document.createElement("canvas");
+    canvas.id = "notes-canvas";
+    canvasContainer.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
 
-  // Window Resize to scale canvas and keep drawing history would be nice,
-  // but for simplicity, we size on open.
-  function resizeCanvas() {
-    canvas.width = canvasContainer.clientWidth;
-    canvas.height = canvasContainer.clientHeight;
-    // Set background to white
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
+    let isDrawing = false, currentTool = "pen", strokeColor = "#000000", strokeWidth = 5;
+    let lastX = 0, lastY = 0;
 
-  // Handle open modal
-  if (btnTrigger) {
-    btnTrigger.addEventListener("click", () => {
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
-      resizeCanvas(); // Ensure it fits the screen
+    function resizeCanvas() {
+      canvas.width = canvasContainer.clientWidth;
+      canvas.height = canvasContainer.clientHeight;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (btnTrigger) {
+      btnTrigger.addEventListener("click", () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+        resizeCanvas();
+      });
+    }
+
+    if (btnClose) {
+      btnClose.addEventListener("click", () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+      });
+    }
+
+    if (btnClear) {
+      btnClear.addEventListener("click", () => {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      });
+    }
+
+    tools.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tools.forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+        currentTool = btn.dataset.tool;
+        if (textInputOverlay) textInputOverlay.style.display = "none";
+      });
     });
-  }
 
-  // Handle close modal
-  if (btnClose) {
-    btnClose.addEventListener("click", () => {
-      modal.classList.remove("active");
-      document.body.style.overflow = "auto";
+    colors.forEach(swatch => {
+      swatch.addEventListener("click", () => {
+        colors.forEach(c => c.classList.remove("active"));
+        swatch.classList.add("active");
+        strokeColor = swatch.dataset.color;
+      });
     });
+
+    if (selectStroke) {
+      selectStroke.addEventListener("change", e => { strokeWidth = parseInt(e.target.value); });
+    }
+
+    function getClientPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    canvas.addEventListener("pointerdown", e => {
+      if (currentTool === "text") return;
+      isDrawing = true;
+      const { x, y } = getClientPos(e);
+      lastX = x; lastY = y;
+      ctx.beginPath();
+      ctx.arc(x, y, strokeWidth / 2, 0, Math.PI * 2);
+      ctx.fillStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
+      ctx.fill();
+    });
+
+    canvas.addEventListener("pointermove", e => {
+      if (!isDrawing || currentTool === "text") return;
+      const { x, y } = getClientPos(e);
+      ctx.beginPath();
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.lineWidth = currentTool === "eraser" ? strokeWidth * 3 : strokeWidth;
+      ctx.strokeStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      lastX = x; lastY = y;
+    });
+
+    canvas.addEventListener("pointerup", () => { isDrawing = false; });
+    canvas.addEventListener("pointerout", () => { isDrawing = false; });
   }
 
-  // Clear Canvas
-  btnClear.addEventListener("click", () => {
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  /* ============================================================
+     FLOATING PENCIL - DRAWING OVERLAY (draws on top of everything)
+     ============================================================ */
+  const fabBtn     = document.getElementById("fab-pencil");
+  const overlay    = document.getElementById("drawing-overlay");
+  const drawCanvas = document.getElementById("drawing-canvas");
+  const dtbTools   = document.querySelectorAll(".dtb-tool");
+  const dtbColors  = document.querySelectorAll(".dtb-color");
+  const dtbStroke  = document.getElementById("dtb-stroke");
+  const dtbClear   = document.getElementById("dtb-clear");
+  const dtbClose   = document.getElementById("dtb-close");
+  const dtbText    = document.getElementById("dtb-text-input");
+
+  if (!fabBtn || !overlay || !drawCanvas) return;
+
+  const dctx = drawCanvas.getContext("2d");
+  let dDrawing = false, dTool = "pen", dColor = "#ffffff", dStroke = 5;
+  let dLastX = 0, dLastY = 0;
+  let overlayOpen = false;
+
+  function resizeDrawCanvas() {
+    // Save existing drawing
+    const imgData = dctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
+    drawCanvas.width = window.innerWidth;
+    drawCanvas.height = window.innerHeight - 56;
+    dctx.putImageData(imgData, 0, 0);
+  }
+
+  function openOverlay() {
+    overlay.classList.add("active");
+    fabBtn.classList.add("active");
+    drawCanvas.width = window.innerWidth;
+    drawCanvas.height = window.innerHeight - 56;
+    overlayOpen = true;
+    // Disable page scrolling/interactions behind
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeOverlay() {
+    overlay.classList.remove("active");
+    fabBtn.classList.remove("active");
+    overlayOpen = false;
+    document.body.style.overflow = "";
+    if (dtbText) dtbText.style.display = "none";
+  }
+
+  fabBtn.addEventListener("click", () => {
+    if (overlayOpen) closeOverlay(); else openOverlay();
   });
 
-  // Tools Selection
-  tools.forEach(btn => {
+  dtbClose.addEventListener("click", closeOverlay);
+
+  dtbClear.addEventListener("click", () => {
+    dctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  });
+
+  dtbTools.forEach(btn => {
     btn.addEventListener("click", () => {
-      tools.forEach(t => t.classList.remove("active"));
+      dtbTools.forEach(t => t.classList.remove("active"));
       btn.classList.add("active");
-      currentTool = btn.dataset.tool;
-      textInputOverlay.style.display = "none";
+      dTool = btn.dataset.tool;
+      if (dtbText) dtbText.style.display = "none";
     });
   });
 
-  // Colors Selection
-  colors.forEach(swatch => {
+  dtbColors.forEach(swatch => {
     swatch.addEventListener("click", () => {
-      colors.forEach(c => c.classList.remove("active"));
+      dtbColors.forEach(c => c.classList.remove("active"));
       swatch.classList.add("active");
-      strokeColor = swatch.dataset.color;
+      dColor = swatch.dataset.color;
     });
   });
 
-  // Stroke width
-  selectStroke.addEventListener("change", (e) => {
-    strokeWidth = parseInt(e.target.value);
-  });
-
-  // Drawing Events (Mouse & Touch via PointerEvents)
-  canvas.addEventListener("pointerdown", startDrawing);
-  canvas.addEventListener("pointermove", draw);
-  canvas.addEventListener("pointerup", stopDrawing);
-  canvas.addEventListener("pointerout", stopDrawing);
-
-  function getClientPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
+  if (dtbStroke) {
+    dtbStroke.addEventListener("change", e => { dStroke = parseInt(e.target.value); });
   }
 
-  function startDrawing(e) {
-    if (currentTool === "text") return; // Text handles click differently
-    
-    // Create text area logic if trying to type but forgot to click text tool - well nah, they should click it.
-    isDrawing = true;
-    const { x, y } = getClientPos(e);
-    lastX = x;
-    lastY = y;
-    
-    // Draw dot for simple click without drag
-    ctx.beginPath();
-    ctx.arc(x, y, strokeWidth / 2, 0, Math.PI * 2);
-    ctx.fillStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
-    ctx.fill();
-    ctx.closePath();
+  function getDPos(e) {
+    const rect = drawCanvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
-  function draw(e) {
-    if (!isDrawing || currentTool === "text") return;
+  let pendingPoints = [];
+  let rafPending = false;
+
+  function renderQueue() {
+    if (pendingPoints.length === 0) {
+      rafPending = false;
+      return;
+    }
+
+    dctx.beginPath();
+    dctx.lineCap = "round";
+    dctx.lineJoin = "round";
+    dctx.lineWidth = dTool === "eraser" ? dStroke * 4 : dStroke;
     
-    const { x, y } = getClientPos(e);
-    
-    ctx.beginPath();
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = strokeWidth;
-    
-    if (currentTool === "eraser") {
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = strokeWidth * 3; // Eraser thicker
+    if (dTool === "eraser") {
+      dctx.globalCompositeOperation = "destination-out";
+      dctx.strokeStyle = "rgba(0,0,0,1)";
     } else {
-      ctx.strokeStyle = strokeColor;
+      dctx.globalCompositeOperation = "source-over";
+      dctx.strokeStyle = dColor;
     }
 
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    let lastX = dLastX;
+    let lastY = dLastY;
+
+    pendingPoints.forEach(p => {
+      dctx.moveTo(lastX, lastY);
+      dctx.lineTo(p.x, p.y);
+      lastX = p.x;
+      lastY = p.y;
+    });
+
+    dctx.stroke();
     
-    lastX = x;
-    lastY = y;
+    dLastX = lastX;
+    dLastY = lastY;
+    pendingPoints = [];
+    
+    rafPending = requestAnimationFrame(renderQueue);
   }
 
-  function stopDrawing() {
-    isDrawing = false;
+  function startDraw(e) {
+    if (dTool === "text") return;
+    dDrawing = true;
+    const { x, y } = getDPos(e);
+    dLastX = x; dLastY = y;
+    
+    dctx.beginPath();
+    dctx.arc(x, y, dStroke / 2, 0, Math.PI * 2);
+    if (dTool === "eraser") {
+      dctx.globalCompositeOperation = "destination-out";
+      dctx.fillStyle = "rgba(0,0,0,1)";
+    } else {
+      dctx.globalCompositeOperation = "source-over";
+      dctx.fillStyle = dColor;
+    }
+    dctx.fill();
+    
+    if (!rafPending) {
+      rafPending = requestAnimationFrame(renderQueue);
+    }
   }
 
-  // Text Tool functionality
-  canvas.addEventListener("click", (e) => {
-    if (currentTool !== "text") return;
-    
-    const { x, y } = getClientPos(e);
-    
-    // Position the input exactly where clicked
-    textInputOverlay.style.display = "block";
-    textInputOverlay.style.left = `${x}px`;
-    textInputOverlay.style.top = `${y - 10}px`; // Adjust offset
-    textInputOverlay.style.color = strokeColor;
-    textInputOverlay.style.fontSize = `${Math.max(16, strokeWidth * 8)}px`; // Scale font slightly
-    textInputOverlay.value = "";
-    textInputOverlay.focus();
-    
-    // Save position for rendering later
-    textInputOverlay.dataset.x = x;
-    textInputOverlay.dataset.y = y;
+  function doDraw(e) {
+    if (!dDrawing || dTool === "text") return;
+    if (e.cancelable) e.preventDefault();
+
+    // Use coalesced events for higher precision if available
+    let points = [];
+    if (e.getCoalescedEvents) {
+      points = e.getCoalescedEvents().map(ce => getDPos(ce));
+    } else {
+      points = [getDPos(e)];
+    }
+
+    pendingPoints.push(...points);
+
+    if (!rafPending) {
+      rafPending = requestAnimationFrame(renderQueue);
+    }
+  }
+
+  function stopDraw() { 
+    dDrawing = false; 
+    if (rafPending) {
+      cancelAnimationFrame(rafPending);
+      rafPending = false;
+    }
+    // Final flush
+    renderQueue();
+    dctx.globalCompositeOperation = "source-over"; 
+  }
+
+  drawCanvas.addEventListener("pointerdown", startDraw);
+  drawCanvas.addEventListener("pointermove", doDraw, { passive: false });
+  drawCanvas.addEventListener("pointerup", stopDraw);
+  drawCanvas.addEventListener("pointerout", stopDraw);
+  drawCanvas.addEventListener("pointercancel", stopDraw);
+
+  // Text tool on drawing overlay
+  drawCanvas.addEventListener("click", e => {
+    if (dTool !== "text") return;
+    const { x, y } = getDPos(e);
+    dtbText.style.display = "block";
+    dtbText.style.left = `${x}px`;
+    dtbText.style.top = `${y + 56}px`;
+    dtbText.style.color = dColor;
+    dtbText.style.fontSize = `${Math.max(16, dStroke * 6)}px`;
+    dtbText.value = "";
+    dtbText.dataset.x = x;
+    dtbText.dataset.y = y;
+    dtbText.focus();
   });
 
-  // Commit text to canvas on blur or Enter
-  function commitText() {
-    if (textInputOverlay.style.display === "none") return;
-    
-    const text = textInputOverlay.value;
-    if (text.trim() !== "") {
-      const x = parseFloat(textInputOverlay.dataset.x);
-      const y = parseFloat(textInputOverlay.dataset.y);
-      const fontSize = Math.max(16, strokeWidth * 8);
-      
-      ctx.font = `${fontSize}px sans-serif`;
-      ctx.fillStyle = strokeColor;
-      ctx.textBaseline = "top";
-      ctx.fillText(text, x, y - 10);
+  function commitDText() {
+    if (dtbText.style.display === "none") return;
+    const text = dtbText.value.trim();
+    if (text) {
+      const x = parseFloat(dtbText.dataset.x);
+      const y = parseFloat(dtbText.dataset.y);
+      const fs = Math.max(16, dStroke * 6);
+      dctx.font = `${fs}px sans-serif`;
+      dctx.fillStyle = dColor;
+      dctx.globalCompositeOperation = "source-over";
+      dctx.textBaseline = "top";
+      dctx.fillText(text, x, y);
     }
-    
-    textInputOverlay.style.display = "none";
-    textInputOverlay.value = "";
+    dtbText.style.display = "none";
+    dtbText.value = "";
   }
 
-  textInputOverlay.addEventListener("blur", commitText);
-  textInputOverlay.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // allow multiline if shift held, else commit
-      commitText();
-    }
+  dtbText.addEventListener("blur", commitDText);
+  dtbText.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitDText(); }
   });
+
+  window.addEventListener("resize", () => { if (overlayOpen) resizeDrawCanvas(); });
+
+  /* ============================================================
+     TIMELINE HORIZONTAL CAROUSEL
+     ============================================================ */
+  const track    = document.getElementById("timeline-track");
+  const wrapper  = track ? track.parentElement : null;
+  const section3 = document.querySelector(".section-3");
+
+  if (!track || !wrapper) return;
+
+  const items = track.querySelectorAll(".timeline-item");
+  const bgs = Array.from(items).map(it => it.dataset.bg || "");
+
+  let currentIndex = 0;
+  let itemWidth = 0;
+  
+  // Drag / swipe state
+  let dragStart = null, dragStartTranslate = 0, isDragging = false, wasDragged = false;
+
+  function getItemWidth() {
+    return track.querySelector(".timeline-item").offsetWidth;
+  }
+
+  function getTranslateX() {
+    const style = window.getComputedStyle(track);
+    const matrix = new DOMMatrix(style.transform);
+    return matrix.m41;
+  }
+
+  function setActive(index) {
+    items.forEach((it, i) => {
+      it.classList.toggle("active", i === index);
+    });
+
+    // Change background of section (like the produtos effect)
+    if (section3 && bgs[index]) {
+      const bgEl = section3.querySelector(".section-bg");
+      if (bgEl) {
+        bgEl.style.transition = "opacity 0.6s ease";
+        bgEl.style.backgroundImage = `url(${bgs[index]})`;
+      }
+    }
+
+    currentIndex = index;
+  }
+
+  function goTo(index) {
+    const visible = window.innerWidth <= 768 ? 2 : 4;
+    const maxScroll = Math.max(0, items.length - visible);
+    
+    // Active index: the actual item clicked/targeted
+    const activeIndex = Math.max(0, Math.min(index, items.length - 1));
+    
+    // Scroll position: clamp so we never scroll past the last page
+    const scrollPos = Math.max(0, Math.min(activeIndex, maxScroll));
+    
+    itemWidth = getItemWidth();
+    track.style.transform = `translateX(-${scrollPos * itemWidth}px)`;
+    setActive(activeIndex);
+  }
+
+  // Click on any part of the item to select it
+  items.forEach((item, i) => {
+    item.addEventListener("click", () => {
+      if (wasDragged) return; // ignore click that was a drag
+      goTo(i);
+    });
+  });
+
+  // Initial state
+  setActive(0);
+
+  function onDragStart(e) {
+    const src = e.touches ? e.touches[0] : e;
+    dragStart = src.clientX;
+    dragStartTranslate = getTranslateX();
+    isDragging = true;
+    wasDragged = false;
+    track.style.transition = "none";
+  }
+
+  function onDragMove(e) {
+    if (!isDragging || dragStart === null) return;
+    if (e.cancelable) e.preventDefault();
+    const src = e.touches ? e.touches[0] : e;
+    const delta = src.clientX - dragStart;
+    if (Math.abs(delta) > 5) wasDragged = true;
+    track.style.transform = `translateX(${dragStartTranslate + delta}px)`;
+  }
+
+  function onDragEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.transition = "";
+
+    const src = e.changedTouches ? e.changedTouches[0] : e;
+    const delta = src.clientX - dragStart;
+
+    itemWidth = getItemWidth();
+
+    if (Math.abs(delta) > itemWidth * 0.2) {
+      const newIndex = delta < 0
+        ? Math.min(currentIndex + 1, items.length - 1)
+        : Math.max(currentIndex - 1, 0);
+      goTo(newIndex);
+    } else {
+      goTo(currentIndex);
+    }
+
+    dragStart = null;
+    // Reset wasDragged after a short delay so the click event (which fires after mouseup) can check it
+    setTimeout(() => { wasDragged = false; }, 50);
+  }
+
+  wrapper.addEventListener("mousedown", onDragStart);
+  window.addEventListener("mousemove", onDragMove);
+  window.addEventListener("mouseup", onDragEnd);
+
+  wrapper.addEventListener("touchstart", onDragStart, { passive: true });
+  wrapper.addEventListener("touchmove", onDragMove, { passive: false });
+  wrapper.addEventListener("touchend", onDragEnd);
+
+  window.addEventListener("resize", () => { goTo(currentIndex); });
 
 });
