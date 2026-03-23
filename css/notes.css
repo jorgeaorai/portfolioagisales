@@ -189,6 +189,7 @@
   height: calc(100vh - 56px);
   cursor: crosshair;
   display: block;
+  touch-action: none;
 }
 
 /* Text input overlay */
@@ -288,8 +289,18 @@
 .action-btn { background-color: white; border: 1px solid #ccc; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: #333; transition: background 0.2s; }
 .action-btn:hover { background-color: #f0f0f0; }
 
-.canvas-container { flex: 1; position: relative; overflow: hidden; background-color: #ffffff; cursor: crosshair; }
-#notes-canvas { display: block; }
+.canvas-container { 
+  flex: 1; 
+  position: relative; 
+  overflow: hidden; 
+  background-color: #ffffff; 
+  cursor: crosshair;
+  touch-action: none;
+}
+#notes-canvas { 
+  display: block;
+  touch-action: none;
+}
 
 #text-input-overlay {
   position: absolute; display: none; background: transparent;

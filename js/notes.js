@@ -73,37 +73,66 @@ document.addEventListener("DOMContentLoaded", () => {
       selectStroke.addEventListener("change", e => { strokeWidth = parseInt(e.target.value); });
     }
 
+    let points = [];
     function getClientPos(e) {
       const rect = canvas.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      return { 
+        x: e.clientX - rect.left, 
+        y: e.clientY - rect.top,
+        pressure: e.pressure || 0.5,
+        pointerType: e.pointerType
+      };
     }
 
     canvas.addEventListener("pointerdown", e => {
       if (currentTool === "text") return;
       isDrawing = true;
-      const { x, y } = getClientPos(e);
-      lastX = x; lastY = y;
+      const p = getClientPos(e);
+      points = [p];
+      
       ctx.beginPath();
-      ctx.arc(x, y, strokeWidth / 2, 0, Math.PI * 2);
       ctx.fillStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
+      const r = (strokeWidth * p.pressure) / 2;
+      ctx.arc(p.x, p.y, r > 0.5 ? r : 0.5, 0, Math.PI * 2);
       ctx.fill();
     });
 
     canvas.addEventListener("pointermove", e => {
       if (!isDrawing || currentTool === "text") return;
-      const { x, y } = getClientPos(e);
-      ctx.beginPath();
-      ctx.lineCap = "round"; ctx.lineJoin = "round";
-      ctx.lineWidth = currentTool === "eraser" ? strokeWidth * 3 : strokeWidth;
-      ctx.strokeStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      lastX = x; lastY = y;
+      
+      const newPoints = e.getCoalescedEvents ? 
+        e.getCoalescedEvents().map(ce => getClientPos(ce)) : 
+        [getClientPos(e)];
+
+      newPoints.forEach(p => {
+        const lastP = points[points.length - 1];
+        if (!lastP) {
+          points.push(p);
+          return;
+        }
+
+        ctx.beginPath();
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        
+        const currentP = (p.pressure + lastP.pressure) / 2;
+        const isEraser = currentTool === "eraser";
+        ctx.lineWidth = isEraser ? strokeWidth * 3 * currentP : strokeWidth * currentP;
+        ctx.strokeStyle = isEraser ? "#ffffff" : strokeColor;
+
+        // Quadratic smoothing
+        const xc = (lastP.x + p.x) / 2;
+        const yc = (lastP.y + p.y) / 2;
+        ctx.moveTo(lastP.x, lastP.y);
+        ctx.quadraticCurveTo(lastP.x, lastP.y, xc, yc);
+        ctx.stroke();
+        
+        points.push(p);
+      });
     });
 
-    canvas.addEventListener("pointerup", () => { isDrawing = false; });
-    canvas.addEventListener("pointerout", () => { isDrawing = false; });
+    canvas.addEventListener("pointerup", () => { isDrawing = false; points = []; });
+    canvas.addEventListener("pointerout", () => { isDrawing = false; points = []; });
   }
 
   /* ============================================================
@@ -185,14 +214,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getDPos(e) {
     const rect = drawCanvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    return { 
+      x: e.clientX - rect.left, 
+      y: e.clientY - rect.top,
+      pressure: e.pressure || 0.5
+    };
   }
 
   let pendingPoints = [];
   let rafPending = false;
 
   function renderQueue() {
-    if (pendingPoints.length === 0) {
+    if (pendingPoints.length < 2) {
       rafPending = false;
       return;
     }
@@ -200,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
     dctx.beginPath();
     dctx.lineCap = "round";
     dctx.lineJoin = "round";
-    dctx.lineWidth = dTool === "eraser" ? dStroke * 4 : dStroke;
     
     if (dTool === "eraser") {
       dctx.globalCompositeOperation = "destination-out";
@@ -210,33 +242,41 @@ document.addEventListener("DOMContentLoaded", () => {
       dctx.strokeStyle = dColor;
     }
 
-    let lastX = dLastX;
-    let lastY = dLastY;
+    // We start from the last position
+    dctx.moveTo(dLastX, dLastY);
 
-    pendingPoints.forEach(p => {
-      dctx.moveTo(lastX, lastY);
-      dctx.lineTo(p.x, p.y);
-      lastX = p.x;
-      lastY = p.y;
-    });
+    for (let i = 0; i < pendingPoints.length; i++) {
+      const p = pendingPoints[i];
+      
+      // Dynamic width based on pressure
+      const pPressure = p.pressure;
+      dctx.lineWidth = dTool === "eraser" ? dStroke * 4 * pPressure : dStroke * pPressure;
+
+      // Use quadratic curve for smoothing if we have enough points, 
+      // otherwise lineTo for immediate feedback
+      const xc = (dLastX + p.x) / 2;
+      const yc = (dLastY + p.y) / 2;
+      dctx.quadraticCurveTo(dLastX, dLastY, xc, yc);
+
+      dLastX = p.x;
+      dLastY = p.y;
+    }
 
     dctx.stroke();
-    
-    dLastX = lastX;
-    dLastY = lastY;
     pendingPoints = [];
-    
     rafPending = requestAnimationFrame(renderQueue);
   }
 
   function startDraw(e) {
     if (dTool === "text") return;
     dDrawing = true;
-    const { x, y } = getDPos(e);
-    dLastX = x; dLastY = y;
+    const p = getDPos(e);
+    dLastX = p.x; dLastY = p.y;
     
     dctx.beginPath();
-    dctx.arc(x, y, dStroke / 2, 0, Math.PI * 2);
+    const r = (dStroke * p.pressure) / 2;
+    dctx.arc(p.x, p.y, r > 0.5 ? r : 0.5, 0, Math.PI * 2);
+    
     if (dTool === "eraser") {
       dctx.globalCompositeOperation = "destination-out";
       dctx.fillStyle = "rgba(0,0,0,1)";
@@ -255,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!dDrawing || dTool === "text") return;
     if (e.cancelable) e.preventDefault();
 
-    // Use coalesced events for higher precision if available
     let points = [];
     if (e.getCoalescedEvents) {
       points = e.getCoalescedEvents().map(ce => getDPos(ce));
