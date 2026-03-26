@@ -351,7 +351,7 @@
                       <div class="row justify-content-center">
                         <div class="col-12 fadeY fadeY-1">
                           <!-- Timeline Horizontal Carrossel -->
-                          <div class="timeline-carousel-wrapper">
+                          <div class="carousel-container-relative" style="position: relative;">
                             <!-- Navigation Arrows -->
                             <button class="carousel-nav-btn prev" id="timeline-prev">
                               <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
@@ -359,7 +359,8 @@
                             <button class="carousel-nav-btn next" id="timeline-next">
                               <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                             </button>
-                            <div class="timeline-track" id="timeline-track">
+                            <div class="timeline-carousel-wrapper">
+                              <div class="timeline-track" id="timeline-track">
                               <!-- Item 1 -->
                               <div class="timeline-item" data-index="0" data-bg="images/ortoclin.jpg">
                                 <div class="timeline-circle">
@@ -485,7 +486,7 @@
                   <div class="container">
                     <div class="intro">
                       <!-- Big Numbers Top (Full Width) -->
-                      <div class="bn-carousel-wrapper">
+                      <div class="bn-carousel-container-relative" style="position: relative;">
                         <!-- Navigation Arrows -->
                         <button class="carousel-nav-btn prev" id="bn-prev">
                           <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
@@ -493,7 +494,8 @@
                         <button class="carousel-nav-btn next" id="bn-next">
                           <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                         </button>
-                        <div id="bn-track" class="big-numbers-row">
+                        <div class="bn-carousel-wrapper">
+                          <div id="bn-track" class="big-numbers-row">
                           <div class="big-number-card">
                             <span class="big-number-value">26</span>
                             <span class="big-number-label">estados abrangidos</span>
@@ -516,6 +518,7 @@
                           </div>
                         </div>
                       </div>
+                    </div>
 
                       <div class="row align-items-center">
                         <div class="col-lg-6 offset-xl-1">
