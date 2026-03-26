@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agisales-v2'; // Increment version to trigger update
+const CACHE_NAME = 'agisales-v3'; // Increment version
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -22,45 +22,70 @@ const ASSETS_TO_CACHE = [
   './favicon.png',
   './apple-touch-icon.png',
   './offline.html',
+  './images/videobg.mp4',
+  './images/videometodologia.mp4',
   'https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap',
   'https://unpkg.com/dexie/dist/dexie.js'
 ];
 
-// Install: Cache all critical assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Caching App Shell');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
   self.skipWaiting();
 });
 
-// Activate: Clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('[SW] Removing old cache:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) => Promise.all(
+      keys.map((key) => {
+        if (key !== CACHE_NAME) return caches.delete(key);
+      })
+    ))
   );
   self.clients.claim();
 });
 
-// Fetch Strategy: 
-// 1. Assets (HTML, JS, CSS, fonts) -> Cache First
-// 2. Data/API (Forms, map data) -> Network First with Fallback
+// Helper for Range requests (Essential for Safari/iOS videos)
+async function handleRangeRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const response = await cache.match(request);
+  if (!response) {
+    try {
+      return await fetch(request);
+    } catch (e) {
+      return new Response('', { status: 404 });
+    }
+  }
+
+  const rangeHeader = request.headers.get('Range');
+  if (!rangeHeader) return response;
+
+  const data = await response.arrayBuffer();
+  const bytes = rangeHeader.replace(/bytes=/, '').split('-');
+  const start = parseInt(bytes[0], 10);
+  const end = bytes[1] ? parseInt(bytes[1], 10) : data.byteLength - 1;
+
+  return new Response(data.slice(start, end + 1), {
+    status: 206,
+    statusText: 'Partial Content',
+    headers: {
+      ...Object.fromEntries(response.headers.entries()),
+      'Content-Range': `bytes ${start}-${end}/${data.byteLength}`,
+      'Content-Length': end - start + 1,
+    },
+  });
+}
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Example of Network First for certain paths if any (e.g. results, maps)
+  // Handle Video Range Requests
+  if (url.pathname.endsWith('.mp4')) {
+    event.respondWith(handleRangeRequest(event.request));
+    return;
+  }
+
   if (url.pathname.includes('/mapa/')) {
     event.respondWith(
       fetch(event.request)
@@ -74,14 +99,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Default: Cache First with Network Fallback
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request).catch(() => {
-        // Fallback for navigation (page) requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('./offline.html');
-        }
+        if (event.request.mode === 'navigate') return caches.match('./offline.html');
       });
     })
   );

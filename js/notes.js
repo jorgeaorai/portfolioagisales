@@ -489,11 +489,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const src = e.touches ? e.touches[0] : e;
     const deltaX = src.clientX - dragStartX;
-    const deltaY = dragStartY !== null ? src.clientY - dragStartY : 0;
+    const deltaY = src.clientY - dragStartY;
     
-    // Determine scroll intent on first move
+    // Determine scroll intent after a small threshold (10px)
     if (isScrolling === null) {
-      isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+      if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+        isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+      } else {
+        return; // wait for more movement
+      }
     }
     
     // If user is trying to scroll vertically, let the browser handle it.
@@ -587,10 +591,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!bnIsDragging || bnDragStartX === null) return;
       const src = e.touches ? e.touches[0] : e;
       const deltaX = src.clientX - bnDragStartX;
-      const deltaY = (bnDragStartY !== null && src.clientY !== undefined) ? src.clientY - bnDragStartY : 0;
+      const deltaY = src.clientY - bnDragStartY;
       
       if (bnIsScrolling === null) {
-        bnIsScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+        if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+          bnIsScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+        } else {
+          return;
+        }
       }
       
       if (bnIsScrolling) {
