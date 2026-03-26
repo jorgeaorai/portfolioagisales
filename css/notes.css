@@ -315,13 +315,11 @@
   position: relative;
   margin-top: 60px;
   padding: 44px 0 44px;
-  cursor: grab;
+  cursor: default;
   user-select: none;
 }
 
-.timeline-carousel-wrapper:active {
-  cursor: grabbing;
-}
+/* Removed .timeline-carousel-wrapper:active cursor: grabbing */
 
 .timeline-track {
   display: flex;
@@ -536,4 +534,65 @@
 
 .video-popup-close:hover {
   background: rgba(255, 255, 255, 0.4);
+}
+/* ============================================================
+   CAROUSEL NAVIGATION ARROWS
+   ============================================================ */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  padding: 0;
+  outline: none;
+}
+
+.carousel-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #11afdc;
+  color: #11afdc;
+}
+
+.carousel-nav-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.carousel-nav-btn.prev {
+  left: 0;
+}
+
+.carousel-nav-btn.next {
+  right: 0;
+}
+
+/* Specific adjustments for timeline */
+.timeline-carousel-wrapper .carousel-nav-btn {
+  top: 52px; /* Centered with the circles */
+}
+
+/* Specific adjustments for big numbers */
+.bn-carousel-wrapper .carousel-nav-btn {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 768px) {
+  .carousel-nav-btn {
+    width: 32px;
+    height: 32px;
+  }
 }

@@ -416,18 +416,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let itemWidth = 0;
   
-  // Drag / swipe state
-  let dragStartX = null, dragStartY = null, dragStartTranslate = 0, isDragging = false, wasDragged = false;
-  let isScrolling = null; // keeps track of user intent: true = vertical scroll, false = horizontal drag
-
   function getItemWidth() {
     return track.querySelector(".timeline-item").offsetWidth;
-  }
-
-  function getTranslateX() {
-    const style = window.getComputedStyle(track);
-    const matrix = new DOMMatrix(style.transform);
-    return matrix.m41;
   }
 
   function setActive(index) {
@@ -435,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
       it.classList.toggle("active", i === index);
     });
 
-    // Change background of section (like the produtos effect)
     if (section3 && bgs[index]) {
       const bgEl = section3.querySelector(".section-bg");
       if (bgEl) {
@@ -443,21 +432,17 @@ document.addEventListener("DOMContentLoaded", () => {
         bgEl.style.backgroundImage = `url(${bgs[index]})`;
       }
     }
-
     currentIndex = index;
   }
 
   function goTo(index) {
     const visible = window.innerWidth <= 768 ? 2 : 4;
     const maxScroll = Math.max(0, items.length - visible);
-    
-    // Active index: the actual item clicked/targeted
     const activeIndex = Math.max(0, Math.min(index, items.length - 1));
-    
-    // Scroll position: clamp so we never scroll past the last page
     const scrollPos = Math.max(0, Math.min(activeIndex, maxScroll));
     
     itemWidth = getItemWidth();
+    track.style.transition = "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
     track.style.transform = `translateX(-${scrollPos * itemWidth}px)`;
     setActive(activeIndex);
   }
@@ -465,7 +450,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Click on any part of the item to select it
   items.forEach((item, i) => {
     item.addEventListener("click", () => {
-      if (wasDragged) return; // ignore click that was a drag
       goTo(i);
     });
   });
@@ -473,78 +457,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial state
   setActive(0);
 
-  function onDragStart(e) {
-    const src = e.touches ? e.touches[0] : e;
-    dragStartX = src.clientX;
-    dragStartY = src.clientY;
-    dragStartTranslate = getTranslateX();
-    isDragging = true;
-    wasDragged = false;
-    isScrolling = null; // reset 
-    track.style.transition = "none";
+  // Navigation buttons
+  const btnPrev = document.getElementById("timeline-prev");
+  const btnNext = document.getElementById("timeline-next");
+
+  if (btnPrev) {
+    btnPrev.addEventListener("click", () => {
+      goTo(currentIndex - 1);
+    });
   }
 
-  function onDragMove(e) {
-    if (!isDragging || dragStartX === null) return;
-    
-    const src = e.touches ? e.touches[0] : e;
-    const deltaX = src.clientX - dragStartX;
-    const deltaY = src.clientY - dragStartY;
-    
-    // Determine scroll intent after a small threshold (10px)
-    if (isScrolling === null) {
-      if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-        isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
-      } else {
-        return; // wait for more movement
-      }
-    }
-    
-    // If user is trying to scroll vertically, let the browser handle it.
-    if (isScrolling) {
-      isDragging = false; 
-      return;
-    }
-    
-    // If it's a horizontal drag, prevent page scroll and update carousel position
-    if (e.cancelable) e.preventDefault();
-    if (Math.abs(deltaX) > 5) wasDragged = true;
-    track.style.transform = `translateX(${dragStartTranslate + deltaX}px)`;
+  if (btnNext) {
+    btnNext.addEventListener("click", () => {
+      goTo(currentIndex + 1);
+    });
   }
-
-  function onDragEnd(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    track.style.transition = "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-
-    const src = e.changedTouches ? e.changedTouches[0] : e;
-    const deltaX = src.clientX - dragStartX;
-
-    itemWidth = getItemWidth();
-
-    if (Math.abs(deltaX) > itemWidth * 0.2) {
-      const newIndex = deltaX < 0
-        ? Math.min(currentIndex + 1, items.length - 1)
-        : Math.max(currentIndex - 1, 0);
-      goTo(newIndex);
-    } else {
-      goTo(currentIndex);
-    }
-
-    dragStartX = null;
-    dragStartY = null;
-    isScrolling = null;
-    // Reset wasDragged after a short delay so the click event (which fires after mouseup) can check it
-    setTimeout(() => { wasDragged = false; }, 50);
-  }
-
-  wrapper.addEventListener("mousedown", onDragStart);
-  window.addEventListener("mousemove", onDragMove);
-  window.addEventListener("mouseup", onDragEnd);
-
-  wrapper.addEventListener("touchstart", onDragStart, { passive: true });
-  wrapper.addEventListener("touchmove", onDragMove, { passive: false });
-  wrapper.addEventListener("touchend", onDragEnd);
 
   window.addEventListener("resize", () => { goTo(currentIndex); });
 
@@ -557,14 +484,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (bnTrack && bnWrapper) {
     const bnItems = bnTrack.querySelectorAll(".big-number-card");
     let bnCurrentIndex = 0;
-    let bnDragStartX = null, bnDragStartY = null, bnDragStartTranslate = 0, bnIsDragging = false, bnWasDragged = false;
-    let bnIsScrolling = null;
-
-    function getBNTranslateX() {
-      const style = window.getComputedStyle(bnTrack);
-      const matrix = new DOMMatrix(style.transform);
-      return matrix.m41;
-    }
 
     function goToBN(index) {
       const cardWidth = bnItems[0].offsetWidth + 15; // include gap
@@ -572,71 +491,27 @@ document.addEventListener("DOMContentLoaded", () => {
       const maxScroll = Math.max(0, bnItems.length - visible);
       const targetIndex = Math.max(0, Math.min(index, maxScroll));
       
+      bnTrack.style.transition = "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
       bnTrack.style.transform = `translateX(-${targetIndex * cardWidth}px)`;
       bnCurrentIndex = targetIndex;
     }
 
-    function onBNDragStart(e) {
-      const src = e.touches ? e.touches[0] : e;
-      bnDragStartX = src.clientX;
-      bnDragStartY = src.clientY;
-      bnDragStartTranslate = getBNTranslateX();
-      bnIsDragging = true;
-      bnWasDragged = false;
-      bnIsScrolling = null;
-      bnTrack.style.transition = "none";
+    // Navigation buttons
+    const bnPrev = document.getElementById("bn-prev");
+    const bnNext = document.getElementById("bn-next");
+
+    if (bnPrev) {
+      bnPrev.addEventListener("click", () => {
+        goToBN(bnCurrentIndex - 1);
+      });
     }
 
-    function onBNDragMove(e) {
-      if (!bnIsDragging || bnDragStartX === null) return;
-      const src = e.touches ? e.touches[0] : e;
-      const deltaX = src.clientX - bnDragStartX;
-      const deltaY = src.clientY - bnDragStartY;
-      
-      if (bnIsScrolling === null) {
-        if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-          bnIsScrolling = Math.abs(deltaY) > Math.abs(deltaX);
-        } else {
-          return;
-        }
-      }
-      
-      if (bnIsScrolling) {
-        bnIsDragging = false; 
-        return;
-      }
-      
-      if (e.cancelable) e.preventDefault();
-      if (Math.abs(deltaX) > 5) bnWasDragged = true;
-      bnTrack.style.transform = `translateX(${bnDragStartTranslate + deltaX}px)`;
+    if (bnNext) {
+      bnNext.addEventListener("click", () => {
+        goToBN(bnCurrentIndex + 1);
+      });
     }
 
-    function onBNDragEnd(e) {
-      if (!bnIsDragging) return;
-      bnIsDragging = false;
-      bnTrack.style.transition = "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-      
-      const src = e.changedTouches ? e.changedTouches[0] : e;
-      const deltaX = src.clientX - bnDragStartX;
-      const cardWidth = bnItems[0].offsetWidth + 15;
-      
-      if (Math.abs(deltaX) > cardWidth * 0.2) {
-        const newIndex = deltaX < 0 ? bnCurrentIndex + 1 : bnCurrentIndex - 1;
-        goToBN(newIndex);
-      } else {
-        goToBN(bnCurrentIndex);
-      }
-      setTimeout(() => { bnWasDragged = false; }, 50);
-    }
-
-    bnWrapper.addEventListener("mousedown", onBNDragStart);
-    window.addEventListener("mousemove", onBNDragMove);
-    window.addEventListener("mouseup", onBNDragEnd);
-    
-    bnWrapper.addEventListener("touchstart", onBNDragStart, { passive: true });
-    bnWrapper.addEventListener("touchmove", onBNDragMove, { passive: false });
-    bnWrapper.addEventListener("touchend", onBNDragEnd);
-    
     window.addEventListener("resize", () => { goToBN(bnCurrentIndex); });
   }
 

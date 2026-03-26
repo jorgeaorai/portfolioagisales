@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agisales-v3'; // Increment version
+const CACHE_NAME = 'agisales-v4'; // Increment version
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -24,6 +24,7 @@ const ASSETS_TO_CACHE = [
   './offline.html',
   './images/videobg.mp4',
   './images/videometodologia.mp4',
+  './images/agivideo1.mp4',
   'https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap',
   'https://unpkg.com/dexie/dist/dexie.js'
 ];
