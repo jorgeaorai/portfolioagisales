@@ -182,7 +182,7 @@
 		    sectionSelector: '.section',
 		    loopBottom: false,
 		    loopTop: false,
-		    anchors: ['page1', 'page1-2', 'page3', 'page4-2', 'page-blank-methodology', 'page4', 'page6', 'page-methodology'],
+		    anchors: ['home', 'estrategia', 'timeline', 'presenca', 'metodologia', 'advisor', 'solucoes', 'informacoes'],
 		    afterLoad: function(anchorLink, index){
 	           navbarFullpage();
 	            
