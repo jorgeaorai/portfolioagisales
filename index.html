@@ -757,34 +757,42 @@
       </svg>
     </button>
 
-    <!-- Drawing Overlay -->
+    <!-- Premium Drawing Overlay (Annotation Layer) -->
     <div id="drawing-overlay">
-      <div class="drawing-toolbar">
-        <div class="dtb-group">
-          <button class="dtb-tool active" data-tool="pen">&#9999;&#65039; Caneta</button>
-          <button class="dtb-tool" data-tool="eraser">&#129529; Borracha</button>
-          <button class="dtb-tool" data-tool="text">&#128288;&#65039; Texto</button>
+      <div class="drawing-toolbar premium-toolbar">
+        <div class="mac-controls">
+          <div class="mac-dot close" id="dtb-close-mac"></div>
+          <div class="mac-dot minimize"></div>
+          <div class="mac-dot maximize"></div>
         </div>
-        <div class="dtb-group dtb-colors">
-          <div class="dtb-color active" data-color="#ffffff" style="background:#ffffff;"></div>
-          <div class="dtb-color" data-color="#11afdc" style="background:#11afdc;"></div>
-          <div class="dtb-color" data-color="#ff3b30" style="background:#ff3b30;"></div>
-          <div class="dtb-color" data-color="#34c759" style="background:#34c759;"></div>
-          <div class="dtb-color" data-color="#ffcc00" style="background:#ffcc00;"></div>
-          <div class="dtb-color" data-color="#000000" style="background:#000000;"></div>
+        
+        <div class="dtb-group-main">
+          <button class="dtb-tool-p active" data-tool="pen">✏️ Caneta</button>
+          <button class="dtb-tool-p" data-tool="eraser">🧹 Borracha</button>
+          <button class="dtb-tool-p" data-tool="text">🔤 Texto</button>
         </div>
-        <div class="dtb-group">
-          <label style="color:#fff;font-size:12px;margin-right:4px;">Espessura</label>
-          <select id="dtb-stroke">
+
+        <div class="dtb-separator"></div>
+
+        <div class="dtb-colors-p">
+          <div class="dtb-color-p active" data-color="#ffffff" style="background:#ffffff;"></div>
+          <div class="dtb-color-p" data-color="#11afdc" style="background:#11afdc;"></div>
+          <div class="dtb-color-p" data-color="#ff3b30" style="background:#ff3b30;"></div>
+          <div class="dtb-color-p" data-color="#34c759" style="background:#34c759;"></div>
+          <div class="dtb-color-p" data-color="#ffcc00" style="background:#ffcc00;"></div>
+          <div class="dtb-color-p" data-color="#000000" style="background:#000000;"></div>
+        </div>
+
+        <div class="dtb-separator"></div>
+
+        <div class="dtb-settings">
+          <select id="dtb-stroke-p">
             <option value="2">Fino</option>
             <option value="5" selected>Médio</option>
             <option value="10">Grosso</option>
             <option value="20">Extra</option>
           </select>
-        </div>
-        <div class="dtb-group">
-          <button id="dtb-clear" class="dtb-action">Limpar</button>
-          <button id="dtb-close" class="dtb-action dtb-close-btn">&#10005; Fechar</button>
+          <button id="dtb-clear-p" class="dtb-btn-clear">Limpar Tudo</button>
         </div>
       </div>
       <canvas id="drawing-canvas"></canvas>

@@ -173,25 +173,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const fabBtn     = document.getElementById("fab-pencil");
   const overlay    = document.getElementById("drawing-overlay");
   const drawCanvas = document.getElementById("drawing-canvas");
-  const dtbTools   = document.querySelectorAll(".dtb-tool");
-  const dtbColors  = document.querySelectorAll(".dtb-color");
-  const dtbStroke  = document.getElementById("dtb-stroke");
-  const dtbClear   = document.getElementById("dtb-clear");
-  const dtbClose   = document.getElementById("dtb-close");
+  const dtbTools   = document.querySelectorAll(".dtb-tool-p");
+  const dtbColors  = document.querySelectorAll(".dtb-color-p");
+  const dtbStroke  = document.getElementById("dtb-stroke-p");
+  const dtbClear   = document.getElementById("dtb-clear-p");
+  const dtbClose   = document.getElementById("dtb-close-mac");
   const dtbText    = document.getElementById("dtb-text-input");
 
   if (!fabBtn || !overlay || !drawCanvas) return;
 
   const dctx = drawCanvas.getContext("2d");
   let dDrawing = false, dTool = "pen", dColor = "#ffffff", dStroke = 5;
-  let dLastX = 0, dLastY = 0;
+  let dLastX = 0, dLastY = 0, dLastXC = 0, dLastYC = 0;
   let overlayOpen = false;
 
   function resizeDrawCanvas() {
     // Save existing drawing
     const imgData = dctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
     drawCanvas.width = window.innerWidth;
-    drawCanvas.height = window.innerHeight - 56;
+    drawCanvas.height = window.innerHeight;
     dctx.putImageData(imgData, 0, 0);
   }
 
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.classList.add("active");
     fabBtn.classList.add("active");
     drawCanvas.width = window.innerWidth;
-    drawCanvas.height = window.innerHeight - 56;
+    drawCanvas.height = window.innerHeight;
     overlayOpen = true;
     // Disable page scrolling/interactions behind
     document.body.style.overflow = "hidden";
@@ -265,6 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dctx.beginPath();
     dctx.lineCap = "round";
     dctx.lineJoin = "round";
+    dctx.setLineDash([]);
     
     if (dTool === "eraser") {
       dctx.globalCompositeOperation = "destination-out";
@@ -274,27 +275,29 @@ document.addEventListener("DOMContentLoaded", () => {
       dctx.strokeStyle = dColor;
     }
 
-    // We start from the last position
-    dctx.moveTo(dLastX, dLastY);
-
     for (let i = 0; i < pendingPoints.length; i++) {
       const p = pendingPoints[i];
-      
-      // Dynamic width based on pressure
       const pPressure = p.pressure;
       dctx.lineWidth = dTool === "eraser" ? dStroke * 4 * pPressure : dStroke * pPressure;
 
-      // Use quadratic curve for smoothing if we have enough points, 
-      // otherwise lineTo for immediate feedback
       const xc = (dLastX + p.x) / 2;
       const yc = (dLastY + p.y) / 2;
+      
+      dctx.beginPath();
+      // Use the last saved midpoint if available, otherwise use last position
+      const startX = dLastXC || dLastX;
+      const startY = dLastYC || dLastY;
+      
+      dctx.moveTo(startX, startY);
       dctx.quadraticCurveTo(dLastX, dLastY, xc, yc);
+      dctx.stroke();
 
       dLastX = p.x;
       dLastY = p.y;
+      dLastXC = xc;
+      dLastYC = yc;
     }
 
-    dctx.stroke();
     pendingPoints = [];
     rafPending = requestAnimationFrame(renderQueue);
   }
@@ -304,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dDrawing = true;
     const p = getDPos(e);
     dLastX = p.x; dLastY = p.y;
+    dLastXC = p.x; dLastYC = p.y;
     
     dctx.beginPath();
     const r = (dStroke * p.pressure) / 2;
@@ -364,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const { x, y } = getDPos(e);
     dtbText.style.display = "block";
     dtbText.style.left = `${x}px`;
-    dtbText.style.top = `${y + 56}px`;
+    dtbText.style.top = `${y}px`;
     dtbText.style.color = dColor;
     dtbText.style.fontSize = `${Math.max(16, dStroke * 6)}px`;
     dtbText.value = "";

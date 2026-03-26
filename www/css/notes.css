@@ -61,124 +61,121 @@
   pointer-events: all;
 }
 
-.drawing-toolbar {
+.premium-toolbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 56px;
-  background: rgba(20, 20, 30, 0.92);
-  backdrop-filter: blur(12px);
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 52px;
+  background: rgba(20, 20, 30, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
   display: flex;
   align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  z-index: 10000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  width: auto;
+  max-width: 95vw;
+}
+
+.mac-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.mac-dot.close { background: #ff5f56; cursor: pointer; }
+.mac-dot.minimize { background: #ffbd2e; opacity: 0.5; }
+.mac-dot.maximize { background: #27c93f; opacity: 0.5; }
+
+.dtb-group-main {
+  display: flex;
   gap: 8px;
-  padding: 0 16px;
-  z-index: 9998;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 
-.dtb-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-right: 1px solid rgba(255,255,255,0.15);
-  padding-right: 12px;
-  margin-right: 4px;
-}
-
-.dtb-group:last-child {
-  border-right: none;
-}
-
-.dtb-tool {
+.dtb-tool-p {
   background: transparent;
-  border: 1px solid transparent;
-  color: rgba(255,255,255,0.75);
-  padding: 6px 10px;
-  border-radius: 8px;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 12px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.15s ease;
+  font-size: 14px;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
-.dtb-tool:hover {
-  background: rgba(255,255,255,0.1);
+.dtb-tool-p:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
-.dtb-tool.active {
-  background: rgba(17, 175, 220, 0.3);
-  border-color: #11afdc;
-  color: #fff;
+.dtb-tool-p.active {
+  background: rgba(17, 175, 220, 0.25);
+  color: #11afdc;
   font-weight: 600;
+  box-shadow: 0 0 10px rgba(17, 175, 220, 0.2);
 }
 
-/* Colors */
-.dtb-colors {
+.dtb-separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+}
+
+.dtb-colors-p {
+  display: flex;
   gap: 8px;
 }
 
-.dtb-color {
-  width: 22px;
-  height: 22px;
+.dtb-color-p {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.2s ease;
 }
 
-.dtb-color:hover {
-  transform: scale(1.15);
+.dtb-color-p:hover { transform: scale(1.2); }
+.dtb-color-p.active { border-color: #fff; transform: scale(1.25); }
+
+.dtb-settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.dtb-color.active {
-  border-color: #fff;
-  transform: scale(1.2);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
-}
-
-/* Stroke select */
-.dtb-group label {
-  color: rgba(255,255,255,0.7);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-#dtb-stroke {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.25);
+#dtb-stroke-p {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  border-radius: 6px;
-  padding: 4px 6px;
+  border-radius: 8px;
+  padding: 4px 8px;
   font-size: 12px;
   outline: none;
 }
 
-/* Action buttons */
-.dtb-action {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+.dtb-btn-clear {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 12px;
   font-size: 12px;
-  white-space: nowrap;
-  transition: background 0.15s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.dtb-action:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.dtb-close-btn {
-  background: rgba(255, 59, 48, 0.3);
-  border-color: rgba(255,59,48,0.5);
-}
-
-.dtb-close-btn:hover {
-  background: rgba(255,59,48,0.5);
+.dtb-btn-clear:hover {
+  background: rgba(255, 59, 48, 0.2);
+  border-color: rgba(255, 59, 48, 0.3);
 }
 
 /* Canvas */
