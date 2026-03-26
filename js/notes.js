@@ -17,8 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const canvas = document.createElement("canvas");
     canvas.id = "notes-canvas";
+    canvas.style.touchAction = "none";
     canvasContainer.appendChild(canvas);
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { desynchronized: true });
 
     let isDrawing = false, currentTool = "pen", strokeColor = "#000000", strokeWidth = 5;
     let lastX = 0, lastY = 0;
@@ -31,10 +32,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (btnTrigger) {
-      btnTrigger.addEventListener("click", () => {
+      btnTrigger.addEventListener("click", async () => {
         modal.classList.add("active");
         document.body.style.overflow = "hidden";
         resizeCanvas();
+        
+        // Restore notes from DB
+        const savedData = await DB.loadNotes();
+        if (savedData) {
+          const img = new Image();
+          img.onload = () => ctx.drawImage(img, 0, 0);
+          img.src = savedData;
+        }
       });
     }
 
@@ -91,10 +100,19 @@ document.addEventListener("DOMContentLoaded", () => {
       points = [p];
       
       ctx.beginPath();
-      ctx.fillStyle = currentTool === "eraser" ? "#ffffff" : strokeColor;
+      ctx.setLineDash([]);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      
+      const isEraser = currentTool === "eraser";
+      ctx.fillStyle = isEraser ? "#ffffff" : strokeColor;
       const r = (strokeWidth * p.pressure) / 2;
       ctx.arc(p.x, p.y, r > 0.5 ? r : 0.5, 0, Math.PI * 2);
       ctx.fill();
+      
+      // Start path for move
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
     });
 
     canvas.addEventListener("pointermove", e => {
@@ -111,27 +129,41 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        ctx.beginPath();
+        const isEraser = currentTool === "eraser";
+        const pressure = p.pressure;
+        ctx.lineWidth = isEraser ? strokeWidth * 3 * pressure : strokeWidth * pressure;
+        ctx.strokeStyle = isEraser ? "#ffffff" : strokeColor;
+        
+        // CRITICAL: Ensure solid line and round tips for every segment
+        ctx.setLineDash([]);
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        
-        const currentP = (p.pressure + lastP.pressure) / 2;
-        const isEraser = currentTool === "eraser";
-        ctx.lineWidth = isEraser ? strokeWidth * 3 * currentP : strokeWidth * currentP;
-        ctx.strokeStyle = isEraser ? "#ffffff" : strokeColor;
 
-        // Quadratic smoothing
         const xc = (lastP.x + p.x) / 2;
         const yc = (lastP.y + p.y) / 2;
-        ctx.moveTo(lastP.x, lastP.y);
+        
+        ctx.beginPath();
+        // We start from the previous midpoint (saved as lastP.xc, lastP.yc)
+        const startX = lastP.xc || lastP.x;
+        const startY = lastP.yc || lastP.y;
+        ctx.moveTo(startX, startY);
         ctx.quadraticCurveTo(lastP.x, lastP.y, xc, yc);
         ctx.stroke();
+        
+        // Save current midpoint to the point object for the next segment
+        p.xc = xc;
+        p.yc = yc;
         
         points.push(p);
       });
     });
 
-    canvas.addEventListener("pointerup", () => { isDrawing = false; points = []; });
+    canvas.addEventListener("pointerup", () => { 
+      isDrawing = false; 
+      points = []; 
+      // Save state to IndexedDB
+      DB.saveNotes(canvas.toDataURL());
+    });
     canvas.addEventListener("pointerout", () => { isDrawing = false; points = []; });
   }
 
@@ -381,7 +413,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let itemWidth = 0;
   
   // Drag / swipe state
-  let dragStart = null, dragStartTranslate = 0, isDragging = false, wasDragged = false;
+  let dragStartX = null, dragStartY = null, dragStartTranslate = 0, isDragging = false, wasDragged = false;
+  let isScrolling = null; // keeps track of user intent: true = vertical scroll, false = horizontal drag
 
   function getItemWidth() {
     return track.querySelector(".timeline-item").offsetWidth;
@@ -438,34 +471,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function onDragStart(e) {
     const src = e.touches ? e.touches[0] : e;
-    dragStart = src.clientX;
+    dragStartX = src.clientX;
+    dragStartY = src.clientY;
     dragStartTranslate = getTranslateX();
     isDragging = true;
     wasDragged = false;
+    isScrolling = null; // reset 
     track.style.transition = "none";
   }
 
   function onDragMove(e) {
-    if (!isDragging || dragStart === null) return;
-    if (e.cancelable) e.preventDefault();
+    if (!isDragging || dragStartX === null) return;
+    
     const src = e.touches ? e.touches[0] : e;
-    const delta = src.clientX - dragStart;
-    if (Math.abs(delta) > 5) wasDragged = true;
-    track.style.transform = `translateX(${dragStartTranslate + delta}px)`;
+    const deltaX = src.clientX - dragStartX;
+    const deltaY = dragStartY !== null ? src.clientY - dragStartY : 0;
+    
+    // Determine scroll intent on first move
+    if (isScrolling === null) {
+      isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+    }
+    
+    // If user is trying to scroll vertically, let the browser handle it.
+    if (isScrolling) {
+      isDragging = false; 
+      return;
+    }
+    
+    // If it's a horizontal drag, prevent page scroll and update carousel position
+    if (e.cancelable) e.preventDefault();
+    if (Math.abs(deltaX) > 5) wasDragged = true;
+    track.style.transform = `translateX(${dragStartTranslate + deltaX}px)`;
   }
 
   function onDragEnd(e) {
     if (!isDragging) return;
     isDragging = false;
-    track.style.transition = "";
+    track.style.transition = "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
     const src = e.changedTouches ? e.changedTouches[0] : e;
-    const delta = src.clientX - dragStart;
+    const deltaX = src.clientX - dragStartX;
 
     itemWidth = getItemWidth();
 
-    if (Math.abs(delta) > itemWidth * 0.2) {
-      const newIndex = delta < 0
+    if (Math.abs(deltaX) > itemWidth * 0.2) {
+      const newIndex = deltaX < 0
         ? Math.min(currentIndex + 1, items.length - 1)
         : Math.max(currentIndex - 1, 0);
       goTo(newIndex);
@@ -473,7 +523,9 @@ document.addEventListener("DOMContentLoaded", () => {
       goTo(currentIndex);
     }
 
-    dragStart = null;
+    dragStartX = null;
+    dragStartY = null;
+    isScrolling = null;
     // Reset wasDragged after a short delay so the click event (which fires after mouseup) can check it
     setTimeout(() => { wasDragged = false; }, 50);
   }
@@ -487,5 +539,93 @@ document.addEventListener("DOMContentLoaded", () => {
   wrapper.addEventListener("touchend", onDragEnd);
 
   window.addEventListener("resize", () => { goTo(currentIndex); });
+
+  /* ============================================================
+     BIG NUMBERS HORIZONTAL CAROUSEL
+     ============================================================ */
+  const bnTrack    = document.getElementById("bn-track");
+  const bnWrapper  = bnTrack ? bnTrack.parentElement : null;
+
+  if (bnTrack && bnWrapper) {
+    const bnItems = bnTrack.querySelectorAll(".big-number-card");
+    let bnCurrentIndex = 0;
+    let bnDragStartX = null, bnDragStartY = null, bnDragStartTranslate = 0, bnIsDragging = false, bnWasDragged = false;
+    let bnIsScrolling = null;
+
+    function getBNTranslateX() {
+      const style = window.getComputedStyle(bnTrack);
+      const matrix = new DOMMatrix(style.transform);
+      return matrix.m41;
+    }
+
+    function goToBN(index) {
+      const cardWidth = bnItems[0].offsetWidth + 15; // include gap
+      const visible = window.innerWidth > 992 ? 3 : (window.innerWidth > 576 ? 2 : 1);
+      const maxScroll = Math.max(0, bnItems.length - visible);
+      const targetIndex = Math.max(0, Math.min(index, maxScroll));
+      
+      bnTrack.style.transform = `translateX(-${targetIndex * cardWidth}px)`;
+      bnCurrentIndex = targetIndex;
+    }
+
+    function onBNDragStart(e) {
+      const src = e.touches ? e.touches[0] : e;
+      bnDragStartX = src.clientX;
+      bnDragStartY = src.clientY;
+      bnDragStartTranslate = getBNTranslateX();
+      bnIsDragging = true;
+      bnWasDragged = false;
+      bnIsScrolling = null;
+      bnTrack.style.transition = "none";
+    }
+
+    function onBNDragMove(e) {
+      if (!bnIsDragging || bnDragStartX === null) return;
+      const src = e.touches ? e.touches[0] : e;
+      const deltaX = src.clientX - bnDragStartX;
+      const deltaY = (bnDragStartY !== null && src.clientY !== undefined) ? src.clientY - bnDragStartY : 0;
+      
+      if (bnIsScrolling === null) {
+        bnIsScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+      }
+      
+      if (bnIsScrolling) {
+        bnIsDragging = false; 
+        return;
+      }
+      
+      if (e.cancelable) e.preventDefault();
+      if (Math.abs(deltaX) > 5) bnWasDragged = true;
+      bnTrack.style.transform = `translateX(${bnDragStartTranslate + deltaX}px)`;
+    }
+
+    function onBNDragEnd(e) {
+      if (!bnIsDragging) return;
+      bnIsDragging = false;
+      bnTrack.style.transition = "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+      
+      const src = e.changedTouches ? e.changedTouches[0] : e;
+      const deltaX = src.clientX - bnDragStartX;
+      const cardWidth = bnItems[0].offsetWidth + 15;
+      
+      if (Math.abs(deltaX) > cardWidth * 0.2) {
+        const newIndex = deltaX < 0 ? bnCurrentIndex + 1 : bnCurrentIndex - 1;
+        goToBN(newIndex);
+      } else {
+        goToBN(bnCurrentIndex);
+      }
+      setTimeout(() => { bnWasDragged = false; }, 50);
+    }
+
+    bnWrapper.addEventListener("mousedown", onBNDragStart);
+    window.addEventListener("mousemove", onBNDragMove);
+    window.addEventListener("mouseup", onBNDragEnd);
+    
+    bnWrapper.addEventListener("touchstart", onBNDragStart, { passive: true });
+    bnWrapper.addEventListener("touchmove", onBNDragMove, { passive: false });
+    bnWrapper.addEventListener("touchend", onBNDragEnd);
+    
+    window.addEventListener("resize", () => { goToBN(bnCurrentIndex); });
+  }
 
 });

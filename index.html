@@ -24,6 +24,10 @@
   <link href="css/map.css" rel="stylesheet">
   <link href="css/solutions.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet" media="screen">
+
+  <!-- PWA & IndexedDB -->
+  <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+  <script src="js/db.js"></script>
   <style>
     body {
       font-family: 'Montserrat', sans-serif !important;
@@ -71,27 +75,27 @@
       transition: 1s opacity;
     }
 
-    /* Big Numbers Section */
+    .bn-carousel-wrapper {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+      padding: 10px 0;
+    }
+
+    .bn-carousel-wrapper:active {
+      cursor: grabbing;
+    }
+
     .big-numbers-row {
       display: flex;
       flex-wrap: nowrap;
-      overflow-x: auto;
       gap: 15px;
       margin-bottom: 30px;
       width: 100%;
-      padding-top: 10px;
-      /* Space for hover transform */
-      padding-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      /* Firefox */
-      -ms-overflow-style: none;
-      /* IE and Edge */
-    }
-
-    .big-numbers-row::-webkit-scrollbar {
-      display: none;
-      /* Chrome, Safari, Opera */
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
     }
 
     .big-number-card {
@@ -100,10 +104,24 @@
       border-radius: 12px;
       padding: 15px 20px;
       text-align: center;
-      min-width: 180px;
-      flex: 1;
+      min-width: 250px;
+      flex: 0 0 calc(33.333% - 15px);
       backdrop-filter: blur(5px);
       transition: all 0.3s ease;
+    }
+
+    @media (max-width: 992px) {
+      .big-number-card {
+        flex: 0 0 calc(50% - 15px);
+        min-width: 200px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .big-number-card {
+        flex: 0 0 calc(100% - 15px);
+        min-width: 100%;
+      }
     }
 
     .big-number-card:hover {
@@ -462,26 +480,28 @@
                   <div class="container">
                     <div class="intro">
                       <!-- Big Numbers Top (Full Width) -->
-                      <div class="big-numbers-row">
-                        <div class="big-number-card">
-                          <span class="big-number-value">26</span>
-                          <span class="big-number-label">estados abrangidos</span>
-                        </div>
-                        <div class="big-number-card">
-                          <span class="big-number-value">10</span>
-                          <span class="big-number-label">unidades de negócios</span>
-                        </div>
-                        <div class="big-number-card">
-                          <span class="big-number-value">6k+</span>
-                          <span class="big-number-label">empresas em nosso ecossistema</span>
-                        </div>
-                        <div class="big-number-card">
-                          <span class="big-number-value">1.4M+</span>
-                          <span class="big-number-label">vidas sob gestão</span>
-                        </div>
-                        <div class="big-number-card">
-                          <span class="big-number-value">R$ 100M+</span>
-                          <span class="big-number-label">em faturamento</span>
+                      <div class="bn-carousel-wrapper">
+                        <div id="bn-track" class="big-numbers-row">
+                          <div class="big-number-card">
+                            <span class="big-number-value">26</span>
+                            <span class="big-number-label">estados abrangidos</span>
+                          </div>
+                          <div class="big-number-card">
+                            <span class="big-number-value">10</span>
+                            <span class="big-number-label">unidades de negócios</span>
+                          </div>
+                          <div class="big-number-card">
+                            <span class="big-number-value">6k+</span>
+                            <span class="big-number-label">empresas em nosso ecossistema</span>
+                          </div>
+                          <div class="big-number-card">
+                            <span class="big-number-value">1.4M+</span>
+                            <span class="big-number-label">vidas sob gestão</span>
+                          </div>
+                          <div class="big-number-card">
+                            <span class="big-number-value">R$ 100M+</span>
+                            <span class="big-number-label">em faturamento</span>
+                          </div>
                         </div>
                       </div>
 
@@ -844,6 +864,7 @@
 
     <!-- Scripts -->
     <script src="js/scripts.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/notes.js"></script>
     <script src="js/map-data.js"></script>
     <script src="js/map.js"></script>

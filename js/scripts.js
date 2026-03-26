@@ -249,10 +249,21 @@
 			$(this).validate({
 				errorClass: 'error',
 			    submitHandler: function(form){
+                    const formData = $(form).serialize();
+                    const url = $(form).attr('action') || 'mail.php';
+
+                    if (!navigator.onLine) {
+                        DB.queueForm(formData, url);
+                        $('.form-group-message').show();
+                        $('#error').hide();
+                        $('#success').html('<strong> Offline! </strong> Sua mensagem foi salva e será enviada quando você reconectar.').show();
+                        return;
+                    }
+
 		        	$.ajax({
 			            type: "POST",
-			            url:"mail.php",
-			            data: $(form).serialize(),
+			            url: url,
+			            data: formData,
 			            success: function() {
 			            	$('.form-group-message').show();
 			            	$('#error').hide();

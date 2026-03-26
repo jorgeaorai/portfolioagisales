@@ -2139,3 +2139,51 @@ a.brand:focus{
 
 
 
+
+/* ------------------------------------------------------------------------------
+  PWA & Offline Styles
+-------------------------------------------------------------------------------*/
+.pwa-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(17, 175, 220, 0.9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+}
+
+.pwa-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.pwa-toast.warning { background: #f39c12; }
+.pwa-toast.success { background: #2ecc71; }
+.pwa-toast.info { background: #3498db; }
+
+body.is-offline {
+    filter: grayscale(0.2);
+}
+
+body.is-offline::after {
+    content: 'OFFLINE MODE';
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    z-index: 10000;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
