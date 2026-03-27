@@ -1,5 +1,5 @@
-const CACHE_NAME = 'agisales-v3'; // Increment version
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'agisales-v5'; // Increment version
+const CORE_ASSETS = [
   './',
   './index.html',
   './css/style.css',
@@ -22,15 +22,29 @@ const ASSETS_TO_CACHE = [
   './favicon.png',
   './apple-touch-icon.png',
   './offline.html',
-  './images/videobg.mp4',
-  './images/videometodologia.mp4',
   'https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap',
   'https://unpkg.com/dexie/dist/dexie.js'
 ];
 
+const VIDEO_ASSETS = [
+  './images/videobg.mp4',
+  './images/videometodologia.mp4',
+  './images/agivideo1.mp4'
+];
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      // Cache core assets all at once (fail if any core fails)
+      const corePromise = cache.addAll(CORE_ASSETS);
+      
+      // Cache videos individually to allow failures (due to size/timeout)
+      const videoPromises = VIDEO_ASSETS.map(url => 
+        cache.add(url).catch(err => console.warn(`[SW] Failed to cache video: ${url}`, err))
+      );
+
+      return Promise.all([corePromise, ...videoPromises]);
+    })
   );
   self.skipWaiting();
 });
@@ -61,19 +75,29 @@ async function handleRangeRequest(request) {
   const rangeHeader = request.headers.get('Range');
   if (!rangeHeader) return response;
 
-  const data = await response.arrayBuffer();
+  const data = await response.blob();
   const bytes = rangeHeader.replace(/bytes=/, '').split('-');
   const start = parseInt(bytes[0], 10);
-  const end = bytes[1] ? parseInt(bytes[1], 10) : data.byteLength - 1;
+  const end = bytes[1] ? parseInt(bytes[1], 10) : data.size - 1;
 
-  return new Response(data.slice(start, end + 1), {
+  if (start >= data.size || end >= data.size) {
+    return new Response('', {
+      status: 416,
+      statusText: 'Requested Range Not Satisfiable',
+      headers: { 'Content-Range': `bytes */${data.size}` }
+    });
+  }
+
+  const chunk = data.slice(start, end + 1);
+  const headers = new Headers(response.headers);
+  headers.set('Content-Range', `bytes ${start}-${end}/${data.size}`);
+  headers.set('Content-Length', chunk.size);
+  headers.set('Accept-Ranges', 'bytes');
+
+  return new Response(chunk, {
     status: 206,
     statusText: 'Partial Content',
-    headers: {
-      ...Object.fromEntries(response.headers.entries()),
-      'Content-Range': `bytes ${start}-${end}/${data.byteLength}`,
-      'Content-Length': end - start + 1,
-    },
+    headers: headers
   });
 }
 
