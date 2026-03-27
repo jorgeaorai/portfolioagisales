@@ -1,0 +1,912 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#11afdc">
+
+  <title>Agisales</title>
+
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+  <link href="css/owl.carousel.min.css" rel="stylesheet">
+  <link href="css/notes.css" rel="stylesheet" media="screen">
+  <link href="css/map.css" rel="stylesheet">
+  <link href="css/solutions.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet" media="screen">
+
+  <!-- PWA & IndexedDB -->
+  <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+  <script src="js/db.js"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 400 !important;
+      background-color: #050a12 !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .title,
+    .display-1,
+    .display-2 {
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 600 !important;
+    }
+
+    .display-2 {
+      font-size: 4.54rem !important;
+    }
+
+    /* Hide logo on first page */
+    body.pp-viewing-home .brand {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .brand {
+      transition: all 0.5s ease;
+    }
+
+    .bg-video-full {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -100;
+      object-fit: cover;
+      transition: 1s opacity;
+    }
+
+    .bn-carousel-wrapper {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      cursor: default;
+      user-select: none;
+      padding: 10px 0;
+    }
+
+    /* Removed .bn-carousel-wrapper:active cursor: grabbing */
+
+    .big-numbers-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 15px;
+      margin-bottom: 30px;
+      width: 100%;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+
+    .big-number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      text-align: center;
+      min-width: 250px;
+      flex: 0 0 calc(33.333% - 15px);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 992px) {
+      .big-number-card {
+        flex: 0 0 calc(50% - 15px);
+        min-width: 200px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .big-number-card {
+        flex: 0 0 calc(100% - 15px);
+        min-width: 100%;
+      }
+    }
+
+    .big-number-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #11afdc;
+      transform: translateY(-5px);
+    }
+
+    .big-number-value {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #11afdc;
+      margin-bottom: 5px;
+    }
+
+    .big-number-label {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.2;
+    }
+
+    /* Map Legend */
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .legend-box.office {
+      border: 1px solid #fff;
+      background: transparent;
+    }
+
+    .legend-box.coverage {
+      background: rgba(17, 175, 220, 0.4);
+      border: 1px solid #11afdc;
+    }
+
+    /* Map Interaction Styles */
+    #map-3d-container svg .state {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state .shape {
+      fill: rgba(17, 175, 220, 0.15);
+      stroke: transparent;
+      stroke-width: 0;
+      transition: all 0.3s ease;
+    }
+
+    #map-3d-container svg .state.active-office .shape {
+      fill: transparent;
+      stroke: transparent;
+      stroke-width: 0;
+    }
+
+    #map-3d-container svg .state:hover .shape {
+      fill: rgba(255, 255, 255, 0.1);
+      stroke: #11afdc;
+      stroke-width: 2px;
+    }
+
+    #map-3d-container svg .label_icon_state {
+      fill: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .big-number-card {
+        min-width: 140px;
+        padding: 10px;
+      }
+
+      .big-number-value {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="pp-viewing-home">
+  <div class="animsition">
+    <div class="loader">
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    </div>
+
+    <!-- Content CLick Capture-->
+
+    <div class="click-capture"></div>
+
+    <!-- Sidebar Menu-->
+
+    <div class="menu">
+      <span class="close-menu icon-cross2 right-boxed"></span>
+      <ul class="menu-list right-boxed">
+        <li data-menuanchor="home">
+          <a href="#home">Home</a>
+        </li>
+        <li data-menuanchor="estrategia">
+          <a href="#estrategia">Estratégia</a>
+        </li>
+        <li data-menuanchor="timeline">
+          <a href="#timeline">Timeline</a>
+        </li>
+        <li data-menuanchor="presenca">
+          <a href="#presenca">Presença</a>
+        </li>
+        <li data-menuanchor="metodologia">
+          <a href="#metodologia">Metodologia</a>
+        </li>
+        <li data-menuanchor="advisor">
+          <a href="#advisor">Advisor</a>
+        </li>
+        <li data-menuanchor="solucoes">
+          <a href="#solucoes">Soluções</a>
+        </li>
+        <li data-menuanchor="informacoes">
+          <a href="#informacoes">Informações</a>
+        </li>
+      </ul>
+      <div class="menu-footer right-boxed">
+      </div>
+    </div>
+
+    <!-- Navbar -->
+
+    <header class="navbar navbar-fullpage boxed">
+      <div class="navbar-bg"></div>
+      <a class="brand" href="#">
+        <img alt="" src="images/uploads/1773853030295.png">
+      </a>
+
+
+
+
+    </header>
+
+    <div class="pagepiling">
+      <div data-anchor="home" class="pp-scrollable text-white section section-1">
+        <div class="scroll-wrap">
+          <video autoplay muted loop playsinline class="bg-video-full">
+            <source src="images/videobg.mp4" type="video/mp4">
+          </video>
+          <div class="scrollable-content">
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <div class="row">
+                        <div class="col-md-8 col-lg-6">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-anchor="estrategia" class="pp-scrollable text-white section section-2">
+        <div class="scroll-wrap">
+          <div class="section-bg" style="background-image:url(images/uploads/bgsec2.jpg);"></div>
+          <div class="scrollable-content">
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <div class="row">
+                        <div class="col-md-8 col-lg-6">
+                          <h1 class="display-2 text-white  wow fadeIn" data-wow-delay="0.1s"><span class="text-primary">
+                              Estratégia
+                            </span> <span style="font-weight: 300;">
+                              não se explica. Se constrói.
+                            </span></h1>
+                          - <a class="popup-video" href="images/agivideo1.mp4"><span <a class="popup-video"
+                              href="#video-popup"><span class="icon ion-ios-play"></span>Assista o vídeo </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-anchor="timeline" class="pp-scrollable text-white section section-3">
+        <div class="scroll-wrap">
+          <div class="section-bg mask" style="background-image:url(images/uploads/1773858987498.jpg);"></div>
+          <div class="scrollable-content">
+            <div class="vertical-title d-none d-lg-block"><span>nossa história</span></div>
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <div class="row justify-content-center">
+                        <div class="col-12 fadeY fadeY-1">
+                          <!-- Timeline Horizontal Carrossel -->
+                          <div class="carousel-container-relative" style="position: relative;">
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-nav-btn prev" id="timeline-prev">
+                              <svg viewBox="0 0 24 24">
+                                <path d="M15 18l-6-6 6-6" />
+                              </svg>
+                            </button>
+                            <button class="carousel-nav-btn next" id="timeline-next">
+                              <svg viewBox="0 0 24 24">
+                                <path d="M9 18l6-6-6-6" />
+                              </svg>
+                            </button>
+                            <div class="timeline-carousel-wrapper">
+                              <div class="timeline-track" id="timeline-track">
+                                <!-- Item 1 -->
+                                <div class="timeline-item" data-index="0" data-bg="images/ortoclin.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/joaquim.jpg" alt="Placeholder 1">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">1997</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">Nasce um sonho</h6>
+                                    <p class="timeline-text">Norteado pelo propósito de Dr. Jurandir Neves, seu pai, Dr.
+                                      Joaquim
+                                      Neves funda em Recife/PE a Ortonclin, guiado pela visão de ampliar e
+                                      transformar vidas através do cuidado odontológico.</p>
+                                  </div>
+                                </div>
+                                <!-- Item 2 -->
+                                <div class="timeline-item" data-index="1" data-bg="images/bgbreno.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/breno.jpg" alt="Placeholder 2">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">2010</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">Uma nova visão sobre o futuro</h6>
+                                    <p class="timeline-text">Breno Neves, segunda geração, assume a presidência, também
+                                      dentista e
+                                      empreendedor, a empresa passa por uma transformação cultural e inicia uma
+                                      transformação digital que iria disruptar o negócio como um todo.
+                                    </p>
+                                  </div>
+                                </div>
+                                <!-- Item 3 -->
+                                <div class="timeline-item" data-index="2" data-bg="images/bgexpansao.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/expansao.jpg" alt="Placeholder 3">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">2014</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">Expandindo Fronteiras</h6>
+                                    <p class="timeline-text">Expandimos nossa operação, começando pelo Agreste/PE e
+                                      depois
+                                      para o
+                                      Sertão/PE e alcançando todos os estados do Nordeste e o estado de Goiás. Criando
+                                      uma
+                                      operação com logística local, mas com abrangência Nacional.
+                                    </p>
+                                  </div>
+                                </div>
+                                <!-- Item 4 -->
+                                <div class="timeline-item" data-index="3" data-bg="images/bgpandemia.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/pandemia.jpg" alt="Placeholder 4">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">2020</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">Contra as Estatísticas </h6>
+                                    <p class="timeline-text">Durante a crise global da COVID-19, enquanto muitos
+                                      negócios
+                                      retraíram, alcançamos
+                                      um crescimento superior a 30% no ano, consolidando a nossa resiliência e
+                                      capacidade
+                                      de adaptação ao inovarmos e criarmos soluções para os nossos clientes.</p>
+                                  </div>
+                                </div>
+                                <!-- Item 5 -->
+                                <div class="timeline-item" data-index="4" data-bg="images/bggptw.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/gptw.jpg" alt="Placeholder 5">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">2024</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">A Fantástica Fábrica de Esticar Gente.</h6>
+                                    <p class="timeline-text">Após recebermos o prêmio GPTW (Great Place to Work) em
+                                      2019,
+                                      em
+                                      2024 através de consultoria promovida pela FIA, fomos reconhecidos como um
+                                      dos "Lugares Incríveis para Trabalhar". Reafirmando o nosso posicionamento como
+                                      uma empresa de cultura forte e acolhedora, transformando potencial em potência.
+                                    </p>
+                                  </div>
+                                </div>
+                                <!-- Item 6 -->
+                                <div class="timeline-item" data-index="5" data-bg="images/bgagi.jpg">
+                                  <div class="timeline-circle">
+                                    <img src="images/agi.jpg" alt="Placeholder 6">
+                                  </div>
+                                  <div class="timeline-connector"></div>
+                                  <div class="timeline-dot"></div>
+                                  <div class="timeline-year">2025</div>
+                                  <div class="timeline-content">
+                                    <h6 class="timeline-title">Nasce a Agisales. Soluções Sob Medidas.</h6>
+                                    <p class="timeline-text">Inconformado com o modelo retrógrado e pouco personalizável
+                                      que
+                                      o mercado de benefícios ofertava para as empresas, Breno Neves convida João Paulo
+                                      Leite
+                                      para repensar o modelo de oferta de benefícios corporativos. Um ecossistema de
+                                      soluções
+                                      pensado para trazer algo sob medida para necessidade do cliente.</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-anchor="presenca" class="pp-scrollable section section-4">
+        <div class="scroll-wrap">
+          <div class="section-bg bg-about" style="background-image:url(images/uploads/1773859257859.jpg);"></div>
+          <div class="scrollable-content">
+            <div class="vertical-title text-white d-none d-lg-block"><span>presença</span></div>
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <!-- Big Numbers Top (Full Width) -->
+                      <div class="bn-carousel-container-relative" style="position: relative;">
+                        <!-- Navigation Arrows -->
+                        <button class="carousel-nav-btn prev" id="bn-prev">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M15 18l-6-6 6-6" />
+                          </svg>
+                        </button>
+                        <button class="carousel-nav-btn next" id="bn-next">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </button>
+                        <div class="bn-carousel-wrapper">
+                          <div id="bn-track" class="big-numbers-row">
+                            <div class="big-number-card">
+                              <span class="big-number-value">26</span>
+                              <span class="big-number-label">estados abrangidos</span>
+                            </div>
+                            <div class="big-number-card">
+                              <span class="big-number-value">10</span>
+                              <span class="big-number-label">unidades de negócios</span>
+                            </div>
+                            <div class="big-number-card">
+                              <span class="big-number-value">6k+</span>
+                              <span class="big-number-label">empresas em nosso ecossistema</span>
+                            </div>
+                            <div class="big-number-card">
+                              <span class="big-number-value">1.4M+</span>
+                              <span class="big-number-label">vidas sob gestão</span>
+                            </div>
+                            <div class="big-number-card">
+                              <span class="big-number-value">R$ 100M+</span>
+                              <span class="big-number-label">em faturamento</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row align-items-center">
+                        <div class="col-lg-6 offset-xl-1">
+                          <div class="map-container"
+                            style="position: relative; width: 100%; max-width: 800px; aspect-ratio: 1/1; margin: 0 auto;">
+                            <div class="map-3d-wrapper">
+                              <div id="map-3d-container" class="map-3d-container">
+                                <!-- Map is dynamically loaded by map.js -->
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Map Legend Bottom -->
+                          <div class="map-legend">
+                            <div class="legend-item">
+                              <div class="legend-box office"></div>
+                              <span>Cobertura</span>
+                            </div>
+                            <div class="legend-item">
+                              <div class="legend-box coverage"></div>
+                              <span>Escritórios</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-5 mt-5 mt-xl-0">
+                          <h2 class="title"> <span class="text-primary">
+                              Presença
+                            </span> <span style="font-weight: 300;">
+                              nacional
+                            </span></h2>
+                          <div class="mt-4 text-light">
+                            <p>Estamos presentes em diferentes regiões do país, conectando
+                              empresas a soluções que fazem sentido para seus negócios.</p>
+                            </p>
+                            <p>Nossa capilaridade nos permite estar próximos, entendendo contextos e oferecendo
+                              respostas mais assertivas.</p>
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- New Blank Methodology Page -->
+      <div data-anchor="metodologia" class="pp-scrollable section section-5" style="background-color: #0b1a28;">
+        <!-- Using a video background as requested -->
+        <video autoplay muted loop playsinline class="bg-video-full">
+          <source src="images/videometodologia.mp4" type="video/mp4">
+        </video>
+        <div class="scroll-wrap" style="height: 100vh; position: relative;">
+          <!-- Vertical Title on the left -->
+          <div class="vertical-title text-white d-none d-lg-block"><span>metodologia</span></div>
+
+          <!-- Blank content area as requested -->
+          <div class="vertical-centred" style="height: 100%;">
+            <div class="boxed boxed-inner" style="height: 100%;">
+              <div class="container" style="height: 100%;">
+                <!-- No content here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-anchor="advisor" class="pp-scrollable section section-6">
+        <div class="scroll-wrap">
+          <div class="section-bg bg-about" style="background-image:url(images/bgadvisiorotavio.jpg);"></div>
+          <div class="scrollable-content">
+            <div class="vertical-title text-white  d-none d-lg-block"><span>advisor</span></div>
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <div class="row align-items-center">
+                        <div class="col-lg-6 offset-xl-1">
+
+                        </div>
+                        <div class="col-lg-5 mt-5 mt-xl-0">
+                          <h2 class="title"> <span class="text-primary">
+                              Ao seu
+                            </span> <span style="font-weight: 300;">
+                              lado, sempre.
+                            </span></h2>
+                          <div class="mt-4 text-light" style="font-size: 1.1rem; line-height: 1.8;">
+                            <p>Valorizamos relações próximas e duradouras.</p>
+
+                            <p>Nossos advisors atuam de forma consultiva, compreendendo as necessidades de cada cliente
+                              e
+                              apoiando decisões com responsabilidade e visão estratégica.</p>
+
+                            <div class="pl-3 py-1 mb-3" style="border-left: 3px solid #11afdc;">
+                              <strong>Atendimento próximo e personalizado</strong><br>
+                              <strong>Acompanhamento contínuo</strong><br>
+                              <strong>Suporte em momentos decisivos</strong>
+                            </div>
+
+                            <p>Mais do que oferecer soluções, buscamos construir relações de confiança.</p>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-anchor="solucoes" class="pp-scrollable section section-6">
+        <div class="solutions-bg-container">
+          <div class="section-bg solutions-bg-overlay active" style="background-image: url('images/odontologia.jpg');"
+            data-index="0"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/telemedicina.jpg');"
+            data-index="1"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/seguro.jpg');"
+            data-index="2"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/cartao.jpg');"
+            data-index="3"></div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/nr1.jpg');" data-index="4">
+          </div>
+          <div class="section-bg solutions-bg-overlay" style="background-image: url('images/bemestar.jpg');"
+            data-index="5"></div>
+        </div>
+        <div class="scroll-wrap">
+          <div class="vertical-title text-white d-none d-lg-block"><span>soluções</span></div>
+
+          <div class="vertical-centred">
+            <div class="boxed boxed-inner">
+              <div class="container">
+                <div class="solutions-container">
+                  <canvas id="ai-visualizer" width="500" height="500"></canvas>
+                  <div class="solution-central-text">Odontologia</div>
+
+                  <div class="solutions-circle-nav">
+                    <!-- Odonto -->
+                    <div class="solution-item active" data-index="0" data-name="Odontologia">
+                      <img src="images/iconodontologia.png" alt="Odontologia">
+                    </div>
+                    <!-- Telemedicina -->
+                    <div class="solution-item" data-index="1" data-name="Telemedicina">
+                      <img src="images/icontelemedicina.png" alt="Telemedicina">
+                    </div>
+                    <!-- Seguro de vida -->
+                    <div class="solution-item" data-index="2" data-name="Seguro de Vida">
+                      <img src="images/iconseguro.png" alt="Seguro de Vida">
+                    </div>
+                    <!-- Cartão de descontos -->
+                    <div class="solution-item" data-index="3" data-name="Cartão de Descontos">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                      </svg>
+                    </div>
+                    <!-- NR1 -->
+                    <div class="solution-item" data-index="4" data-name="NR1">
+                      <img src="images/iconnr1.png" alt="NR1">
+                    </div>
+                    <!-- Bem estar -->
+                    <div class="solution-item" data-index="5" data-name="Bem Estar">
+                      <img src="images/iconbemestar.png" alt="Bem Estar">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-anchor="informacoes" class="pp-scrollable text-white section section-7">
+        <div class="scroll-wrap">
+          <div class="section-bg" style="background-image:url(images/uploads/1773860338864.jpg);"></div>
+          <div class="bg-quote"></div>
+          <div class="scrollable-content">
+            <div class="vertical-title d-none d-lg-block"><span>informações</span></div>
+            <div class="vertical-centred">
+              <div class="boxed boxed-inner">
+                <div class="boxed">
+                  <div class="container">
+                    <div class="intro">
+                      <div class="review-carousel owl-carousel">
+                        <div class="review-carousel-item">
+                          <!-- Botão Grande de Anotações -->
+                          <div class="review-row mb-5">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="btn-notes-trigger" style="margin: 0;">
+                                  Anotações
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Agilidade e inteligência</div>
+                                  <i>em soluções sob medida</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>Sua empresa cresce quando as pessoas crescem.
+                                  Nossos benefícios fazem isso acontecer com zero burocracia e máxima eficiência.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="review-row">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="review-author">
+                                  <div class="author-name">Contato</div>
+                                  <i>entre em contato conosco</i>
+                                </div>
+                              </div>
+                              <div class="col-md-7 text">
+                                <p>
+                                  <www class="agisales com br"></www>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end pagepiling -->
+
+    <!-- Floating Pencil Button -->
+    <button id="fab-pencil" title="Ativar desenho">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+      </svg>
+    </button>
+
+    <!-- Premium Drawing Overlay (Annotation Layer) -->
+    <div id="drawing-overlay">
+      <div class="drawing-toolbar premium-toolbar">
+        <div class="mac-controls">
+          <div class="mac-dot close" id="dtb-close-mac"></div>
+          <div class="mac-dot minimize"></div>
+          <div class="mac-dot maximize"></div>
+        </div>
+
+        <div class="dtb-group-main">
+          <button class="dtb-tool-p active" data-tool="pen">✏️ Caneta</button>
+          <button class="dtb-tool-p" data-tool="eraser">🧹 Borracha</button>
+          <button class="dtb-tool-p" data-tool="text">🔤 Texto</button>
+        </div>
+
+        <div class="dtb-separator"></div>
+
+        <div class="dtb-colors-p">
+          <div class="dtb-color-p active" data-color="#ffffff" style="background:#ffffff;"></div>
+          <div class="dtb-color-p" data-color="#11afdc" style="background:#11afdc;"></div>
+          <div class="dtb-color-p" data-color="#ff3b30" style="background:#ff3b30;"></div>
+          <div class="dtb-color-p" data-color="#34c759" style="background:#34c759;"></div>
+          <div class="dtb-color-p" data-color="#ffcc00" style="background:#ffcc00;"></div>
+          <div class="dtb-color-p" data-color="#000000" style="background:#000000;"></div>
+        </div>
+
+        <div class="dtb-separator"></div>
+
+        <div class="dtb-settings">
+          <select id="dtb-stroke-p">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extra</option>
+          </select>
+          <button id="dtb-clear-p" class="dtb-btn-clear">Limpar Tudo</button>
+        </div>
+      </div>
+      <canvas id="drawing-canvas"></canvas>
+      <textarea id="dtb-text-input" placeholder="Digite aqui..."></textarea>
+    </div>
+
+    <!-- jQuery -->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/smoothscroll.js"></script>
+    <script src="js/animsition.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.pagepiling.min.js"></script>
+
+    <!-- Modal Anotações Tela Cheia -->
+    <div id="notes-modal">
+      <div class="notes-toolbar">
+        <div class="mac-controls">
+          <button class="mac-btn mac-close" title="Fechar"></button>
+          <button class="mac-btn mac-minimize"></button>
+          <button class="mac-btn mac-maximize"></button>
+        </div>
+        <div class="toolbar-tools">
+          <button class="tool-btn active" data-tool="pen">✏️ Caneta</button>
+          <button class="tool-btn" data-tool="text">🔤 Texto</button>
+          <button class="tool-btn" data-tool="eraser">🧹 Borracha</button>
+        </div>
+        <div class="color-picker">
+          <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
+          <div class="color-swatch" data-color="#ff3b30" style="background-color: #ff3b30;"></div>
+          <div class="color-swatch" data-color="#007aff" style="background-color: #007aff;"></div>
+          <div class="color-swatch" data-color="#34c759" style="background-color: #34c759;"></div>
+          <div class="color-swatch" data-color="#ffcc00" style="background-color: #ffcc00;"></div>
+        </div>
+        <div class="stroke-picker" style="margin-left: 15px;">
+          <select id="stroke-width">
+            <option value="2">Fino</option>
+            <option value="5" selected>Médio</option>
+            <option value="10">Grosso</option>
+            <option value="20">Extragrosso</option>
+          </select>
+        </div>
+        <div class="toolbar-actions">
+          <button class="action-btn" id="btn-clear">Limpar Tudo</button>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <textarea id="text-input-overlay" placeholder="Digite e aperte Enter..."></textarea>
+      </div>
+    </div>
+
+    <!-- Office Popup -->
+    <div id="popup-overlay"></div>
+    <div id="office-popup">
+      <button class="popup-close">&times;</button>
+      <div class="popup-header"></div>
+      <div class="popup-body">
+        <h3 class="popup-title"></h3>
+        <p class="popup-desc"></p>
+      </div>
+    </div>
+
+    <!-- Video Popup (Custom) -->
+    <div id="video-popup-overlay"></div>
+    <div id="video-popup">
+      <button class="video-popup-close">&times;</button>
+      <div class="video-popup-body">
+        <video id="main-video" controls width="100%">
+          <source src="images/agivideo1.mp4" type="video/mp4">
+          Seu navegador não suporta vídeos.
+        </video>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/scripts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/map-data.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/solutions.js"></script>
+    <script>
+      if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+      }
+    </script>
+</body>
+
+</html>

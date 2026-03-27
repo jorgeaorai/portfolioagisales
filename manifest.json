@@ -1,7 +1,7 @@
 {
-  "name": "Agisales Portfolio",
+  "name": "Agisales",
   "short_name": "Agisales",
-  "description": "Agisales field service and portfolio application.",
+  "description": "Agisales",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#050a12",
